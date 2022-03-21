@@ -156,7 +156,7 @@ Last modified 2021-12-27
 <p>First, the GV rep1 data (SRR8798075) was downloaded from the NCBI database. The fastq format file contained a total of 63,732 reads, which are all ccs-processed reads and can be used directly for analysis. The tool for sequence alignment is minimap2 (with default parameters) and the reference genome is GRCm38(mm10). Once you have done this you can start using PolyAtailor:</p></li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># require(devtools)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install_github(&quot;XHWUlab/PolyAtailor&quot;)</span></span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install_github(&quot;BMILAB/PolyAtailor&quot;)</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li><p>Quantitative poly(A) tail with tailScan</p>
 <p>All analyses will start with quantitativing the poly(A) tail. The input to this step is a fastq format file containing reads that have been processed by ccs, and the output will be a dataframe containing all the sequence tail information, Include at least read_num,tail,PAL,chr,strand,tailType,read_type and sample. The median length of all tails found by tailScan is 57nt, which is not far from the 59nt reported in the original article.</p></li>
