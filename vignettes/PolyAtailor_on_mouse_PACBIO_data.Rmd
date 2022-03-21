@@ -18,7 +18,7 @@ vignette: >
 
 ```{r}
 # require(devtools)
-# install_github("XHWUlab/PolyAtailor")
+# install_github("BMILAB/PolyAtailor")
 ```
     
 3. Quantitative poly(A) tail with tailScan
