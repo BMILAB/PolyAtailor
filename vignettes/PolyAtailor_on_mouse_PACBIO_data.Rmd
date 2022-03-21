@@ -1,6 +1,6 @@
 ---
 title: "<center>Poly (A) tail analysis of full-length sequencing data of mouse GV oocytes using PolyAtailor package</center>"
-author: "<center>Mengfei Liu lmfff@stu.xmu.edu.cn</center>"
+author: "<center>Xiaohui Wu, Mengfei Liu</center>"
 date: "<center>Last modified `r Sys.Date()`</center>"
 output: rmarkdown::html_vignette
 vignette: >
