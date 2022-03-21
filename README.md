@@ -14,7 +14,7 @@ PolyAtailor starts with the original sequencing data, first pre-processed the or
 ```
 install.packages("devtools")
 require(devtools)
-install_github("XHWUlab/PolyAtailor")
+install_github("BMILAB/PolyAtailor")
 library(PolyAtailor)
 
 ##or you can download ZIP, and then
