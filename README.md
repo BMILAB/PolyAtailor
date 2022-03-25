@@ -3,15 +3,15 @@ A user-friendly R package for measuring poly(A) tail length from NGS-based short
 
 
 ## About
-&nbsp&nbspThe poly(A) tail is a dynamic addition to the eukaryotic mRNA and the change in its length plays an essential role in regulating gene expression. Only recently high-throughput sequencing strategies began to emerge for transcriptome-wide profiling of poly(A) tail length in diverse developmental stages and organisms. However, there is currently no easy-to-use and universal tool for measuring poly(A) tails in sequencing data from different sequencing protocols. Here we established PolyAtailor, a unified and efficient framework, for identifying and analyzing poly(A) tails from PacBio-based long reads or next generation short reads. Particularly, PolyAtailor can identify multiple tails in a read, with detailed information of tail type, tail position, tail length and tail sequence.    
+&nbsp;&nbsp;The poly(A) tail is a dynamic addition to the eukaryotic mRNA and the change in its length plays an essential role in regulating gene expression. Only recently high-throughput sequencing strategies began to emerge for transcriptome-wide profiling of poly(A) tail length in diverse developmental stages and organisms. However, there is currently no easy-to-use and universal tool for measuring poly(A) tails in sequencing data from different sequencing protocols. Here we established PolyAtailor, a unified and efficient framework, for identifying and analyzing poly(A) tails from PacBio-based long reads or next generation short reads. Particularly, PolyAtailor can identify multiple tails in a read, with detailed information of tail type, tail position, tail length and tail sequence.    
      
      
-&nbsp&nbspPolyAtailor takes a sequence file in FASTQ or FASTA format as the input. First, the Tail_scan function can be used for tail extraction, tail filtering and tail classification. If a reference genome is available, then the result from Tail_scan can be further corrected using the Tail_map function. After obtaining results of poly(A) tails from Tail_map or Tail_scan, users can use additional functions in PolyAtailor for poly(A) site identification and annotation, as well as the visualization of base compositions of poly(A) tails, and the detection of PAL (Poly(A) Length) differences under different conditions.     
+&nbsp;&nbsp;PolyAtailor takes a sequence file in FASTQ or FASTA format as the input. First, the Tail_scan function can be used for tail extraction, tail filtering and tail classification. If a reference genome is available, then the result from Tail_scan can be further corrected using the Tail_map function. After obtaining results of poly(A) tails from Tail_map or Tail_scan, users can use additional functions in PolyAtailor for poly(A) site identification and annotation, as well as the visualization of base compositions of poly(A) tails, and the detection of PAL (Poly(A) Length) differences under different conditions.     
  
-<img src="./Overview.png" width="90%" align='center' />   
+<img src="./Overview.png" width="100%" align='center' />   
 <div align = 'center'> <font size='15'> Figure 1. Schematic of PolyAtailor. </font> </div>
 
-<img src="./Downstream.png" width="85%" align='center' />   
+<img src="./Downstream.png" width="100%" align='center' />   
 <div align = 'center'> <font size='15'> Figure 2. Downstream analyses of poly(A) tails with PolyAtailor. pA, poly(A) site; PAL, poly(A) length.
  </font> </div>
 
