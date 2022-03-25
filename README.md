@@ -7,7 +7,7 @@ A user-friendly R package for measuring poly(A) tail length from NGS-based short
   PolyAtailor takes a sequence file in FASTQ or FASTA format as the input. First, the Tail_scan function can be used for tail extraction, tail filtering and tail classification. If a reference genome is available, then the result from Tail_scan can be further corrected using the Tail_map function. After obtaining results of poly(A) tails from Tail_map or Tail_scan, users can use additional functions in PolyAtailor for poly(A) site identification and annotation, as well as the visualization of base compositions of poly(A) tails, and the detection of PAL (Poly(A) Length) differences under different conditions.
  
 <img src="./overview.png" width="100%" />   
-<center>Figure 1. Schematic of PolyAtailor.</center>
+<div align = 'center'> <font size='20'> Figure 1. Schematic of PolyAtailor. </font> </div>
 
 
 ## Getting started  
