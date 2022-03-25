@@ -9,7 +9,7 @@ A user-friendly R package for measuring poly(A) tail length from NGS-based short
 <img src="./overview.png" width="100%" />   
 <div align = 'center'> <font size='15'> Figure 1. Schematic of PolyAtailor. </font> </div>
 
-<img src="./Downstream.png" width="100%" />   
+<img src="./Downstream.png" width="90%" align='center' />   
 <div align = 'center'> <font size='15'> Figure 2. Downstream analyses of poly(A) tails with PolyAtailor. pA, poly(A) site; PAL, poly(A) length.
  </font> </div>
 
