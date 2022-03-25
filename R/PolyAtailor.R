@@ -1,9 +1,7 @@
 ## package?PolyAtailor
 #'  PolyAtailor
 #'
-#' @description This package provides functions for identifying and quantifying
-#'   poly(A) tails of full-length sequencing data from BAM files as well as
-#'   difference significance detection.
+#' @description PolyAtailor is a user-friendly R package for measuring poly(A) tail length from NGS-based short-read and PacBio-based long-read sequencing data. Core functions of Tail_map and Tail_scan provided in PolyAtailor can profile tails with or without using a reference genome. PolyAtailor can identify multiple tails in a read, with detailed information of tail type, tail position, tail length and tail sequence. PolyAtailor also integrates rich functions for downstream analyses and visualization of poly(A) tails and poly(A) sites.
 #' @details This package contains most of the functions required in poly(A) tail
 #'   research, including tail recognition from sequence, tail length
 #'   calculation, non-A base recognition and quantifying tail, PA site
