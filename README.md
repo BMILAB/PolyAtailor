@@ -1,6 +1,6 @@
 # PolyAtailor
 A user-friendly R package for measuring poly(A) tail length from NGS-based short-read and PacBio-based long-read sequencing data.
-![image](https://user-images.githubusercontent.com/33172581/160115761-2ce97dd7-4181-4210-933d-2a0a4fc5f145.png)
+
 
 ## About
 PolyAtailor starts with the original sequencing data, first pre-processed the original data of different sequencing technology, and converted into FASTQ format files. Then entering the tail_scan process, perform tail extraction, tail filtering, and tail classification to get tail_scan tails. If the user provides a reference genome, PolyAtailor will continue to use tail_map to fix the preliminary results of tail_scan to get tail_map tails (Figure below). After obtaining accurate tail data, the user can perform the recognition and annotation of the PA sites, and the visualization analysis of the Poly(A) tail base. In addition, users can also perform differential significant analysis of poly(A) tail length of different conditions via PolyAtailor.   
