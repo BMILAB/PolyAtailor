@@ -1,0 +1,143 @@
+---
+title: "<center>An example of using PolyAtailor to combine and compare results from different datasets</center>"
+author: "<center>Mengfei Liu, Xiaohui Wu</center>"
+date: "<center>2022/5/3</center>"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{<center>An example of using PolyAtailor to combine and compare results from different datasets</center>}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## 1. Overview   
+
+  Here, we demonstrate the power of PolyAtailor analysis to compare the results of computations on multi different datasets. The function 'batchCompare' can compare the overlapping of genes with tails in different datasets, the difference in the proportion of different types of sequences, the difference in the length distribution of poly(A) tails, and the overlap of poly(A) sites and so on. For example, in the following example, we show how to use the 'batchCompare' function to analyze and merge the poly(A) tails and poly(A) sites calculations for the PACBIO sequencing Dataset1 and NGS sequencing Dataset2. The 'batchCompare' function supports result comparison in four dimensions: sequence, gene, PA sites, tail length.   
+    
+## 2. Preparation   
+
+  First, the PACBIO sequencing Dataset1 (SRR8568871/SRR8568872) and NGS sequencing Dataset2 (SRR5314571/SRR5314572) were all downloaded from the NCBI database. Both datasets are from the Hela sample. First, the original fastq files were aligned to the reference genome, and then the alignment results were converted into BAM format files and input into Tail_map function of PolyAtailor to measure tails and poly(A) sites. Once you have done this you can start using  the batchCompare function of PolyAtailor to compare the results.   
+    
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = F,
+  fig.width = 6, 
+  fig.height = 6,
+  eval=FALSE
+)
+```   
+
+```{r eval=FALSE}
+# 1.Download sequence files in fastq format from NCBI
+# 2.Align sequences and convert file formats
+# 3.Quantitativing poly(A) tails with PolyAtailor
+library(polyAtailor)
+## For full-length sequences the longRead parameter is set to T
+D1 = tailMap(dataset1.bam,mcans=5,minTailLen=8,findUmi = F,longRead=T)
+head(D1)
+# read_num            chr strand     coord       PAL
+# 1 SRR8568871.100170   NC_000007.14      -  44801385  66
+# 2 SRR8568871.100170   NC_000005.10      +  82009391  66
+# 3 SRR8568871.100177 NW_021160006.1      -    159174  43
+# 4 SRR8568871.100177   NC_000010.11      + 118932093  43
+# 5 SRR8568871.100246   NC_000007.14      -  75416541  83
+# 6 SRR8568871.100246   NC_000007.14      +  73303226  83
+# tail
+# 1 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 2 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 3 TTTTTTTTTTTTTTTTTTTTTTTTTGGTTTTTTTTTTTTTTTT
+# 4 TTTTTTTTTTTTTTTTTTTTTTTTTGGTTTTTTTTTTTTTTTT
+# 5 TTTTTTTT...TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 6 TTTTTTTT...TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# tailType      read_type nA        rt 
+# 1 structural two-tail-mixed 66 1.0000000
+# 2 structural two-tail-mixed 66 1.0000000
+# 3 structural two-tail-mixed 41 0.9534884  
+# 4 structural two-tail-mixed 41 0.9534884  
+# 5 structural two-tail-mixed 83 1.0000000  
+# 6 structural two-tail-mixed 83 1.0000000  
+## For NGS sequences the longread parameter is set to F
+D2 = tailMap(dataset2.bam,mcans=5,minTailLen=8,findUmi = F,longRead=F)
+head(D2)
+# read_num          chr strand     coord PAL           tail 
+# 60  SRR5314571.10000235 NC_000002.12      +  32916482  14 TTTTTTTTTTCCTT      
+# 84  SRR5314571.10000325 NC_000001.11      + 179201983  11    TTTTTTTTCTT      
+# 292 SRR5314571.10001293 NC_000001.11      + 179201983  13  TTTTTTTTTTCTT      
+# 352 SRR5314571.10001518 NC_000011.10      +  66003917   8       TTTTTTTT      
+# 394 SRR5314571.10001748 NC_000015.10      +  90953981  10     TTTTTTTTAT      
+# 402  SRR5314571.1000177 NC_000002.12      +  28801419  14 TTTTTTTTTTTTTT      
+# tailType  read_type nA        rt
+# NA  60   one-tail 12 0.8571429    
+# NA  84   one-tail 10 0.9090909     
+# NA  292  one-tail 12 0.9230769     
+# NA  352  one-tail  8 1.0000000     
+# NA  394  one-tail  9 0.9000000     
+# NA  402  one-tail 14 1.0000000     
+# 4.Poly(A) sites determination with PolyAtailor
+## example
+library("BSgenome.Hsapiens.UCSC.hg38")
+library("TxDb.Hsapiens.UCSC.hg38.knownGene")
+bsgenome = BSgenome.Hsapiens.UCSC.hg38
+gffFile = TxDb.Hsapiens.UCSC.hg38.knownGene
+bamfile = "./dataset1.bam"
+chrinfo = "./chrinfo.txt"
+resultpath = "./result"
+pacD1 = findAndAnnoPAs(bamfile,chrinfo,resultpath,bsgenome,gffFile,sample="D1rep1",mergePAs=T)
+```   
+
+## 3. Overlap of tailed genes found in the two datasets   
+
+  The first function of batchCompare is to compare the overlap of tailed genes found in multiple data sets. There are two drawing methods to choose from: the upset graph and the veen graph, which are set by the parameter format. In the figure below, we plot the overlap of tailed genes in replicate 1 of the two datasets in two ways. In the figure, 'Batch1' represents repetition 1 of Dataset1, and Batch2 represents repetition 1 of Dataset2.     
+    
+```{r eval=FALSE}
+datalist = list(Batch1 = D1, Batch2 = D2)
+p = batchCompare(datalist,format="upset",dimension="gene",mycolors=c("#be8ec4","#7ed321")) 
+p
+p = batchCompare(datalist,format="veen",dimension="gene",mycolors=c("#be8ec4","#7ed321")) 
+p   
+```     
+
+<img src="./figures/1.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br> 
+
+## 4. Comparing the proportions of sequence types in different dataset calculations   
+
+  When the parameter 'dimension' is set to 'read', users can quickly compare the proportion of different kinds of sequences in different datasets. In the figure below, we compare the proportions of different types of sequences in repetition 1 of the two datasets. The comparison finds that the two-tail-mixed type sequences and unstructural type sequences in the results of Dataset2 are significantly less.    
+    
+```{r eval=FALSE}
+p = batchCompare(datalist,dimension="read",mycolors=c("#9bbfdc","#ab99c1")) 
+p
+```     
+
+<img src="./figures/2.png" style="display: block;margin-left: auto;margin-right: auto;width: 80%;" /><br>    
+
+## 5. Comparing the distribution of tail lengths across different datasets   
+
+  When the parameter 'dimension' is set to 'tail', users can quickly compare  tail length distributions across different datasets. The parameter 'rep' can be used to specify whether to compare different repetitions at the same time. The figure below shows the distribution of tail lengths for different replicates of the two datasets.    
+    
+```{r eval=FALSE}
+p = batchCompare(datalist,dimension="tail",mycolors=c("#f18687","#9bbfdc"),rep=T)
+p
+```     
+
+<img src="./figures/3.png" style="display: block;margin-left: auto;margin-right: auto;width: 80%;" /><br> 
+
+## 6. Comprehensive analysis of poly(A) sites in different datasets   
+
+  When the parameter 'dimension' is set to 'PACds', users can quickly compare or merge lists of poly(A) sites in two datasets. The parameter 'D' is used to specify the range of bases considered to be the same poly(A) site. The parameter 'findOvpPACds' specifies whether to extract overlapping poly(A) site clusters. The parameter 'annotateByKnownPAC' specifies whether to combine the two sets of poly(A) site information in an annotated manner. The function finally outputs a list, in which the data slot named 'OvpPACds' stores the overlapping poly(A) site statistics, the 'OvpPACdsList' data slot stores the overlapping poly(A) site list, and the 'OvpPACdsAnnotate' data slot stores the merged poly(A) site list. We used the 'batchCompare' function to calculate the overlap ratio of poly(A) sites extracted from repeat 1 of the two datasets, and the parameter 'd' was set to 100. The results are as follows:s     
+    
+```{r eval=FALSE}
+PACdslist = list(Batch1 = pacD1, Batch2 = pacD2)
+p = batchCompare(PACdslist,dimension="PACds",findOvpPACds=T,annotateByKnownPAC=T,d=100)
+head(P[['OvpPACds']])
+# pacD1 pacD2 Total1 Total2 Ovp1 Ovp2 Ovp1Pct Ovp2Pct
+# 1    1    1  31289 186626 2404 2775      8%      1%
+```     
+
+ 
+*****   
+***References***     
+Ye W, Liu T, Fu H, et al. movAPA: Modeling and visualization of dynamics of alternative polyadenylation across biological samples[J]. Bioinformatics, 2021, 37(16): 2470-2472.   
+Liu Y, Nie H, Liu H, et al. Poly (A) inclusive RNA isoform sequencing (PAIso− seq) reveals wide-spread non-adenosine residues within RNA poly (A) tails[J]. Nature communications, 2019, 10(1): 1-13.   
+Legnini I, Alles J, Karaiskos N, et al. FLAM-seq: full-length mRNA sequencing reveals principles of poly (A) tail length control[J]. Nature methods, 2019, 16(9): 879-886.
+ 
