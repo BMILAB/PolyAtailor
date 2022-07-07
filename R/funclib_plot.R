@@ -32,11 +32,9 @@ filter_lims <- function(x){
 #'   opposite.
 #' @return A density curve with peak annotations.
 #' @examples
-#' data(AnnotedTails)
-#' p1 <- plotPALDistribution(AnnotedTails,"./","global",medianPAL=T)
-#' p2 <- plotPALDistribution(AnnotedTails,"./","gene",medianPAL=T)
-#' @family Visualization functions
-#' @seealso [plotPADistribution()] to plot the gene region distribution of PA sites.
+#' load("./data/output/AnnotatedTails.RData")
+#' p1 <- plotPALDistribution(AnnotedTails,"./inst/extdata/figures/","global",medianPAL=T)
+#' p2 <- plotPALDistribution(AnnotedTails,"./inst/extdata/figures/","gene",medianPAL=T)
 #' @export
 plotPALDistribution <- function(taildf,resultpath,dType,medianPAL){
   library(RColorBrewer)
@@ -309,11 +307,8 @@ plotPALDistribution <- function(taildf,resultpath,dType,medianPAL){
 #'   defaults to "#196BE1".
 #' @return A barplot.
 #' @examples
-#' data(PAs)
-#' p <- plotPADistribution(PAs,"./","#9BBFDC")
-#' @family Visualization functions
-#' @seealso [plotGenePAnumbers()] to plot the gene frequency distribution with
-#'   different number of PA sites.
+#' load("./data/output/PAs.RData")
+#' p <- plotPADistribution(PAs,"./inst/extdata/figures/","#9BBFDC")
 #' @export
 plotPADistribution <- function(PAdf,resultpath,colorOfBar){
   if(missing(colorOfBar)){
@@ -367,11 +362,8 @@ plotPADistribution <- function(PAdf,resultpath,colorOfBar){
 #'   defaults to "#196BE1".
 #' @return A barplot.
 #' @examples
-#' data(PAs)
-#' p <- plotGenePAnumbers(PAs,"./","#DF7C7D")
-#' @family Visualization functions
-#' @seealso [plotGenePAnumbers()] to plot the gene frequency distribution with
-#'   different number of PA sites.
+#' load("./data/output/PAs.RData")
+#' p <- plotGenePAnumbers(PAs,"./inst/extdata/figures/","#DF7C7D")
 #' @export
 plotGenePAnumbers <- function(PAdf,resultpath,colorOfBar){
   if(missing(colorOfBar)){
@@ -450,11 +442,8 @@ plotGenePAnumbers <- function(PAdf,resultpath,colorOfBar){
 #' @examples
 #' library("BSgenome.Mmusculus.UCSC.mm10")
 #' bsgenome = BSgenome.Mmusculus.UCSC.mm10
-#' data(PAs)
-#' p <- plotPASignals(PAs,"./",bsgenome = bsgenome)
-#' @family Visualization functions
-#' @seealso [plotGenePAnumbers()] to plot the gene frequency distribution with
-#'   different number of PA sites.
+#' load("./data/output/PAs.RData")
+#' p <- plotPASignals(PAs,"./inst/extdata/figures/",bsgenome = bsgenome)
 #' @export
 plotPASignals <- function(PAdf,resultpath,bsgenome,signals,colorOfBar){
   if(missing(colorOfBar)){
@@ -520,15 +509,12 @@ plotPASignals <- function(PAdf,resultpath,bsgenome,signals,colorOfBar){
 #'   number and proportion of reads with non-A bases in each sample and the
 #'   specific occurrence frequency of non-A bases in each sample.
 #' @examples
-#' library(stringi)
-#' data(AnnotedTails)
+#' load("./data/AnnotatedTails.RData")
 #' re <- nonAanalysis(AnnotedTails)
 #' re$p1
 #' re$p2
 #' re$p3
 #' nonAre <- re$nonAinfo
-#' @family Visualization functions
-#' @seealso [tailViso()] to visualize tails using heat maps and logos.
 #' @export
 nonAanalysis <- function(tailinfo,justOneTail){
   if(missing(justOneTail)){
@@ -773,14 +759,9 @@ nonAanalysis <- function(tailinfo,justOneTail){
 #'   identifier, default to T.
 #' @return Return the picture.
 #' @examples
-#' library(ggmsa)
-#' library(seqRFLP)
-#' data(taildf)
+#' load(./data/taildf.RData)
 #' my_cutstom <- data.frame(names=c("A","C","T","G"),color=c("#3171A5","#4EAA4C","#C9C4C2","#D73D3D"))
 #' p <- tailViso(taildf,tailLen=100,Ntail=20,custom=my_cutstom,strand="-",faPath="D:/",showLogo=T,showReadNum= F)
-#' @family Visualization functions
-#' @seealso [DSA_ViolinPlot()] to draw a violin diagram of the result of
-#'   differential tail length analysis.
 #' @export
 tailViso <- function(taildf,tailLen,Ntail,custom,strand,faPath,showLogo,showReadNum){
   ##check the param
@@ -866,38 +847,42 @@ tailViso <- function(taildf,tailLen,Ntail,custom,strand,faPath,showLogo,showRead
 #' @param DSA_result The output of PALdsa(). 
 #' @param SAoDMethod one of "KS", "MWU", "ME", "Wilcox" and "ALL".
 #' @return A ViolinPlot.
-#' @usage 
-#' p <- DSA_ViolinPlot(DSA_result)
-#' @family Visualization functions
-#' @seealso [DSA_UpsetPlot()] to draw a Upset diagram of the result of
-#'   differential tail length analysis.
+#' @examples
+#' BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+#' library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+#' gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
+#' load("./data/AnnotedTails.RData")
+#' PAs <- read.table("./inst/extdata/output/PAs/PAs.txt",header=T,sep=" ")
+#' DSA_result <- PALdsa(PAs,AnnotedTails,gff,mode="PD",SAoDMethod="ME",withViolinPlot=T,withUpsetPlot=F)
+#' p <- DSA_ViolinPlot(DSA_result,SAoDMethod="KS")
 #' @export
 DSA_ViolinPlot <- function(DSA_result,SAoDMethod){
   #data input
-  KS_re <- filter(DSA_result$re2,KS_re<=0.05)[,1]
+  #conflict_prefer("filter", "dplyr")
+  KS_re <- dplyr::filter(DSA_result$re2,KS_re<=0.05)[,1]
   KS_count <- str_c("K-S test\n",dim(KS_re)[1]," genes")
   KS_re <- DSA_result$re1 %>%
-    filter(gene %in% KS_re$gene) %>%
-    select(PAID,PAL) %>%
-    mutate(method=KS_count)
+    dplyr::filter(gene %in% KS_re$gene) %>%
+    dplyr::select(PAID,PAL) %>%
+    dplyr::mutate(method=KS_count)
   Wilcox_re <- filter(DSA_result$re2,wilcox_re<=0.05)[,1]
   Wilcox_count <- str_c("Wilcox test\n",dim(Wilcox_re)[1]," genes")
   Wilcox_re <- DSA_result$re1 %>%
-    filter(gene %in% Wilcox_re$gene) %>%
-    select(PAID,PAL) %>%
-    mutate(method=Wilcox_count)
-  moses_re <- filter(DSA_result$re2,moses_re<=0.05)[,1]
+    dplyr::filter(gene %in% Wilcox_re$gene) %>%
+    dplyr::select(PAID,PAL) %>%
+    dplyr::mutate(method=Wilcox_count)
+  moses_re <- dplyr::filter(DSA_result$re2,moses_re<=0.05)[,1]
   moses_count <- str_c("MosesExtreme reaction\n",dim(moses_re)[1]," genes")
   moses_re <- DSA_result$re1 %>%
-    filter(gene %in% moses_re$gene) %>%
-    select(PAID,PAL) %>%
-    mutate(method=moses_count)
-  MU_re <- filter(DSA_result$re2,MU_re<=0.05)[,1]
+    dplyr::filter(gene %in% moses_re$gene) %>%
+    dplyr::select(PAID,PAL) %>%
+    dplyr::mutate(method=moses_count)
+  MU_re <- dplyr::filter(DSA_result$re2,MU_re<=0.05)[,1]
   MU_count <- str_c("M-W U test\n",dim(MU_re)[1]," genes")
   MU_re <- DSA_result$re1 %>%
-    filter(gene %in% MU_re$gene) %>%
-    select(PAID,PAL) %>%
-    mutate(method=MU_count)
+    dplyr::filter(gene %in% MU_re$gene) %>%
+    dplyr::select(PAID,PAL) %>%
+    dplyr::mutate(method=MU_count)
   if(SAoDMethod == "ALL"){
     plot_data <- rbind(KS_re,Wilcox_re,moses_re,MU_re)
     P <- ggplot(plot_data, aes(x=method, y=PAL, fill=PAID)) +
@@ -1007,7 +992,9 @@ DSA_ViolinPlot <- function(DSA_result,SAoDMethod){
     stop("SAoDMethod must be one of c('KS', 'MWU', 'ME', 'Wilcox', 'ALL')!")
   }
 }
-# DSA_UpsetPlot -----------------------------------------------------------
+
+
+# DSA_UpsetPlot ----------------------------------------------------------
 #' DSA_UpsetPlot
 #'
 #' @description Draw a Upset diagram of the result of differential tail length
@@ -1019,14 +1006,16 @@ DSA_ViolinPlot <- function(DSA_result,SAoDMethod){
 #'   red to represent highly confident tail length genes.
 #' @param DSA_result The output of PALdsa(). 
 #' @return A UpsetPlot.
-#' @usage
+#' @examples
+#' library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+#' gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
+#' data(AnnotedTails)
+#' files = system.file("extdata", "./output/PAs/PAs.txt", package = "PolyAtailor", mustWork = TRUE)
+#' PAs <- read.table(files,header=TRUE,sep=" ")
+#' DSA_result <- PALdsa(PAdf=PAs,PALdf=AnnotedTails,d=24,gff=gff,mode="PD",SAoDMethod="ME",withViolinPlot=T,withUpsetPlot=F)
 #' p <- DSA_UpsetPlot(DSA_result)
-#' @family Visualization functions
-#' @seealso [DSA_ViolinPlot()] to draw a violin diagram of the result of
-#'   differential tail length analysis.
 #' @export
 DSA_UpsetPlot <- function(DSA_result){
-  # library(UpSetR)
   plot_data <- DSA_result[,-c(2,3)]
   plot_data[plot_data == "lose"] <- "0"
   plot_data[is.na(plot_data)] <- "0"
@@ -1051,6 +1040,9 @@ DSA_UpsetPlot <- function(DSA_result){
              sets.x.label = "gene counts", text.scale = c(1, 1,1))
   return(p)
 }
+
+
+
 # PALdsa ------------------------------------------------------------------
 #' PALdsa
 #'
@@ -1086,18 +1078,13 @@ DSA_UpsetPlot <- function(DSA_result){
 #'   a difference significance test method, in which "lose" or "NAN" means that
 #'   for some reason (probably too little data) this method has not been able to
 #'   calculate the exact p-values.
-#' @example
-#' library(movAPA)
+#' @examples
+#' BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 #' library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 #' gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
-#' data(AnnotedTails)
-#' files = system.file("extdata", "./output/PAs/PAs.txt", package = "PolyAtailor", mustWork = TRUE)
-#' PAs <- read.table(files,header=TRUE,sep=" ")
-#' diffPAL2PAgenes <-
-#' PALdsa(PAs,AnnotedTails,gff,mode="PD",SAoDMethod="ME",withViolinPlot=TRUE,withUpsetPlot=F)
-#' @family Visualization functions
-#' @seealso [DSA_ViolinPlot()] to draw a violin diagram of the result of
-#'   differential tail length analysis.
+#' load("./data/AnnotedTails.RData")
+#' PAs <- read.table("./inst/extdata/output/PAs/PAs.txt",header=T,sep=" ")
+#' diffPAL2PAgenes <- PALdsa(PAs,AnnotedTails,gff,mode="PD",SAoDMethod="ME",withViolinPlot=T,withUpsetPlot=F)
 #' @export
 PALdsa <- function(PAdf,PALdf,gff,d,mode,withViolinPlot,withUpsetPlot,SAoDMethod){
   #check the paraments
@@ -1161,7 +1148,7 @@ PALdsa <- function(PAdf,PALdf,gff,d,mode,withViolinPlot,withUpsetPlot,SAoDMethod
 #'   another from PACBIO sequencing technology. batchCompare provides three
 #'   comparable dimensions, namely "gene", "tail", "PACds" or "read".
 #' @param datalist Multiple sets of analysis results stored in list format.
-#' @param format Plot format, "upset" or "veen".
+#' @param format Plot format, "upset" or "veen" or "bar".
 #' @param dimension The dimension to compare, "gene", "tail", "PACds" or "read".
 #' @param mycolors Drawing color card, must be specified, no default value. The
 #'   color number is the same as the number of data sets.
@@ -1176,8 +1163,9 @@ PALdsa <- function(PAdf,PALdf,gff,d,mode,withViolinPlot,withUpsetPlot,SAoDMethod
 #'  @param annotateByKnownPAC Logical variable. annotateByKnownPAC returns
 #'    overlapping status and min distance with given PACdatasets.
 #' @return Return the comparison result graph.
-#' @usage 
+#' @examples
 #' batchCompare(datalist,"upset","read",mycolors=c("#b681bd","#377eb8"))
+#' @export
 batchCompare <- function(datalist,format,dimension,mycolors,rep,findOvpPACds,annotateByKnownPAC,d){
   if(missing(datalist)){
     stop("missing input data!")
@@ -1195,11 +1183,11 @@ batchCompare <- function(datalist,format,dimension,mycolors,rep,findOvpPACds,ann
     stop("Color card must be specified!")
   }
   if(dimension != "tail"){
-    if(!(format %in% c("upset","veen"))){
-      stop("Format must in c('upset','veen')!")
+    if(!(format %in% c("upset","veen","bar"))){
+      stop("Format must in c('upset','veen','bar')!")
     }
   }
-  if(!(dimension %in% c("gene","tail","read"))){
+  if(!(dimension %in% c("gene","tail","read","PACds"))){
     stop("Dimension must in c('gene','tail','PACds','read')!")
   }
   if(dimension == "tail" & missing(rep)){
@@ -1234,8 +1222,8 @@ batchCompare <- function(datalist,format,dimension,mycolors,rep,findOvpPACds,ann
       }
     }
     if(format=="upset"){
-      p<- upset(fromList(dataToPlot),order.by = "freq",
-                queries = list(list(query=intersects,
+      p<- UpSetR::upset(UpSetR::fromList(dataToPlot),order.by = "freq",
+                queries = list(list(query=UpSetR::intersects,
                                     params=batchList,
                                     color="#DD3737", active=T)),
                 sets.bar.color = mycolors)
@@ -1264,21 +1252,21 @@ batchCompare <- function(datalist,format,dimension,mycolors,rep,findOvpPACds,ann
         data$group = paste("Batch",i,sep = "")
         data$rt = data$Freq/(sum(data$Freq))
         data1 = as.data.frame(table(datalist[[i]]$tailType))
-        data1$group = paste("Batch",i,sep = "")
-        data1$rt = data1$Freq/(sum(data1$Freq))
-        dataToPlot = rbind(dataToPlot,data,data1)
+        #data1$group = paste("Batch",i,sep = "")
+        #data1$rt = data1$Freq/(sum(data1$Freq))
+        #dataToPlot = base::rbind(dataToPlot,data,data1)
       }
     }
     dataToPlot$type <- factor(dataToPlot$Var1,levels=c("one-tail","two-tail-same","two-tail-mixed","structural","unstructural"))
-    dataToPlot <- dataToPlot %>% mutate(Percentage=round(rt*100,2))
+    dataToPlot <- dataToPlot %>% dplyr::mutate(Percentage=round(rt*100,2))
     p<-ggplot(dataToPlot,                                   
               aes(x = type,
                   y = Percentage,
                   fill = group)) +
-      geom_bar(stat = "identity",
+      ggplot2::geom_bar(stat = "identity",
                position = "dodge",
                alpha=0.8)+
-      scale_colour_manual(breaks = data22$group,values=c("#9bbfdc","#ab99c1"))+
+      scale_colour_manual(breaks = dataToPlot$group,values=c("#9bbfdc","#ab99c1"))+
       scale_fill_manual(values=c("#9bbfdc","#ab99c1"))+
       xlab("") +
       ylab("Percentage") +
@@ -1299,13 +1287,13 @@ batchCompare <- function(datalist,format,dimension,mycolors,rep,findOvpPACds,ann
   else if(dimension=="tail" & rep == T){
     dataToPlot = data.frame()
     for(i in dataNumber){
-      data <- select(datalist[[i]],PAL,rep)
+      data <- datalist[[i]] %>% dplyr::select(PAL,rep)
       data$sample <- paste("Batch",i,sep = "")
-      dataToPlot = rbind(dataToPlot,data)
+      dataToPlot <- base::rbind(dataToPlot,data)
     }
     p <- dataToPlot %>%
-      group_by(sample) %>%
-      mutate(PAL2 = filter_lims(PAL)) %>%
+      dplyr::group_by(sample) %>%
+      dplyr::mutate(PAL2 = PAL) %>%
       ggplot(aes(x=rep,y=PAL2))+
       geom_flat_violin(aes(fill=sample),position=position_nudge(x=.1),trim = FALSE,)+
       scale_fill_manual(values=mycolors)+
@@ -1313,7 +1301,7 @@ batchCompare <- function(datalist,format,dimension,mycolors,rep,findOvpPACds,ann
       scale_x_discrete(expand=c(0.8, 0))+
       geom_boxplot(width=.07)+
       coord_flip()+
-      theme_base()+
+      ggthemes::theme_base()+
       ylab('Poly(A) tial length')+
       xlab('')+
       facet_wrap(.~sample, scales = "free")
@@ -1321,21 +1309,21 @@ batchCompare <- function(datalist,format,dimension,mycolors,rep,findOvpPACds,ann
   else if(dimension=="tail" & rep == F){
     dataToPlot = data.frame()
     for(i in dataNumber){
-      data <- select(datalist[[i]],PAL)
+      data <- datalist[[i]] %>% dplyr::select(PAL)
       data$sample <- paste("Batch",i,sep = "")
-      dataToPlot = rbind(dataToPlot,data)
+      dataToPlot = base::rbind(dataToPlot,data)
     }
     p <- dataToPlot %>%
-      group_by(sample) %>%
-      mutate(PAL2 = filter_lims(PAL)) %>%
+      dplyr::group_by(sample) %>%
+      dplyr::mutate(PAL2 = PAL) %>%
       ggplot(aes(x="",y=PAL2))+
-      geom_flat_violin(aes(fill=sample),position=position_nudge(x=.1),trim = FALSE,)+
+      PupillometryR::geom_flat_violin(aes(fill=sample),position=position_nudge(x=.1),trim = FALSE,)+
       scale_fill_manual(values=mycolors)+
       scale_color_manual (values=mycolors)+
       scale_x_discrete(expand=c(0.8, 0))+
       geom_boxplot(width=.07)+
       coord_flip()+
-      theme_base()+
+      ggthemes::theme_base()+
       ylab('Poly(A) tial length')+
       xlab('')+
       facet_wrap(.~sample, scales = "free")
@@ -1344,10 +1332,12 @@ batchCompare <- function(datalist,format,dimension,mycolors,rep,findOvpPACds,ann
     p = {}
     p[["OvpPACds"]] = countOvpPACds(datalist[[1]], datalist[[2]], mode1='point', mode2='point', d=d, pats1=1, pats2=1)
     if(findOvpPACds){
-      p[["OvpPACdsList"]] = findOvpPACds(datalist[[1]], datalist[[2]], mode1='point', mode2='point', d=d, pats1=1, pats2=1)
+      # p[["OvpPACdsList"]] = findOvpPACds(datalist[[1]], datalist[[2]], mode1='point', mode2='point', d=d, pats1=1, pats2=1)
+      p[["OvpPACdsList"]] = findOvpPACds(datalist[[1]], datalist[[2]], d=d)
     }
     if(annotateByKnownPAC){
-      p[["OvpPACdsAnnotate"]] = annotateByKnownPAC(datalist[[1]], datalist[[2]], mode1='point', mode2='point', d=d, pats1=1, pats2=1)
+      #p[["OvpPACdsAnnotate"]] = annotateByKnownPAC(datalist[[1]], datalist[[2]], mode1='point', mode2='point', d=d, pats1=1, pats2=1)
+      p[["OvpPACdsAnnotate"]] = annotateByKnownPAC(datalist[[1]], datalist[[2]], d=d,labels=1)
     }
   }
   else{

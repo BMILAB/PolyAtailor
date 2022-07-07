@@ -13,7 +13,7 @@
 #' @param PAinfo A dataframe that contains the PA information of all reads.
 #' @return This function returns a dataframe that contains both PA information
 #'   (including PA gene, type based, chromosome, and so on) and tail information.
-#' @usage
+#' @examples
 #' tailinfo = "the/path/of/tailinfo.txt"
 #' PAinfo = "the/path/of/PAinfo.txt"
 #' finaldata <- infomerge1(tailinfo,PAinfo)
@@ -64,7 +64,7 @@ infomerge1 <- function(tailinfo,PAinfo){
 #' @param PAinfo A dataframe that contains the PA information of all reads.
 #' @return This function returns a dataframe that contains both PA information
 #'   (including PA gene, type based, chromosome, and so on) and tail information.
-#' @usage
+#' @examples
 #' tailinfo = "the/path/of/tailinfo.txt"
 #' PAinfo = "the/path/of/PAinfo.txt"
 #' finaldata <- infomerge(tailinfo,PAinfo)
@@ -120,7 +120,7 @@ infomerge <- function(tailinfo,PAinfo){
 #' @importFrom tidyr separate
 #' @importFrom dplyr select
 #' @importFrom dplyr left_join
-#' @usage
+#' @examples
 #' tailinfo = "the/path/of/tailinfo.txt"
 #' PAinfo = "the/path/of/PAinfo.txt"
 #' finaldata <- PASTailMerge(tailinfo,PAinfo)
