@@ -12,78 +12,92 @@ knitr::opts_chunk$set(
 #  # 1.Download sequence files in fastq format from NCBI
 #  # 2.Align sequences and convert file formats
 #  # 3.Quantitativing poly(A) tails with PolyAtailor
+#  rm(list=ls())
 #  library(polyAtailor)
+#  #require(devtools)
+#  #install_github("BMILAB/movAPA")
+#  library(movAPA)
+#  #Persistently prefer one function over anothe, in case
+#  conflict_prefer_all("PolyAtailor", "dplyr")
+#  conflict_prefer_all("PolyAtailor", "IRanges")
+#  conflict_prefer("summarise", "dplyr")
+#  
 #  ## For full-length sequences the longRead parameter is set to T
-#  D1 = tailMap("./dataset1.bam",mcans=5,minTailLen=8,findUmi = F,longRead=T)
-#  head(D1)
-#  # read_num            chr strand     coord       PAL
-#  # 1 SRR8568871.100170   NC_000007.14      -  44801385  66
-#  # 2 SRR8568871.100170   NC_000005.10      +  82009391  66
-#  # 3 SRR8568871.100177 NW_021160006.1      -    159174  43
-#  # 4 SRR8568871.100177   NC_000010.11      + 118932093  43
-#  # 5 SRR8568871.100246   NC_000007.14      -  75416541  83
-#  # 6 SRR8568871.100246   NC_000007.14      +  73303226  83
-#  # tail
-#  # 1 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-#  # 2 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-#  # 3 TTTTTTTTTTTTTTTTTTTTTTTTTGGTTTTTTTTTTTTTTTT
-#  # 4 TTTTTTTTTTTTTTTTTTTTTTTTTGGTTTTTTTTTTTTTTTT
-#  # 5 TTTTTTTT...TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-#  # 6 TTTTTTTT...TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-#  # tailType      read_type nA        rt
-#  # 1 structural two-tail-mixed 66 1.0000000
-#  # 2 structural two-tail-mixed 66 1.0000000
-#  # 3 structural two-tail-mixed 41 0.9534884
-#  # 4 structural two-tail-mixed 41 0.9534884
-#  # 5 structural two-tail-mixed 83 1.0000000
-#  # 6 structural two-tail-mixed 83 1.0000000
+#  #here dataset1 is subset of Dataset1 data
+#  data1.path <- system.file("extdata", "./GV_algin/dataset1_sort.bam", package = "PolyAtailor", mustWork = TRUE)
+#  D1 = tailMap(bamfile=data1.path,mcans=5,minTailLen=8,findUmi = F,longRead=T)
+#  head(D1[,1:4])
+#  #            read_num          chr strand     coord
+#  # 1 SRR8568871.105958 NC_000001.11      - 149842185
+#  # 2  SRR8568871.13378 NC_000001.11      -   8870646
+#  # 3 SRR8568871.134537 NC_000001.11      +  58999617
+#  # 4 SRR8568871.135358 NC_000001.11      + 236483105
+#  # 5 SRR8568871.138552 NC_000001.11      - 149860081
+#  # 6 SRR8568871.141140 NC_000001.11      +  23961696
+#  
 #  ## For NGS sequences the longread parameter is set to F
-#  D2 = tailMap("./dataset2.bam",mcans=5,minTailLen=8,findUmi = F,longRead=F)
-#  head(D2)
-#  # read_num          chr strand     coord PAL           tail
-#  # 60  SRR5314571.10000235 NC_000002.12      +  32916482  14 TTTTTTTTTTCCTT
-#  # 84  SRR5314571.10000325 NC_000001.11      + 179201983  11    TTTTTTTTCTT
-#  # 292 SRR5314571.10001293 NC_000001.11      + 179201983  13  TTTTTTTTTTCTT
-#  # 352 SRR5314571.10001518 NC_000011.10      +  66003917   8       TTTTTTTT
-#  # 394 SRR5314571.10001748 NC_000015.10      +  90953981  10     TTTTTTTTAT
-#  # 402  SRR5314571.1000177 NC_000002.12      +  28801419  14 TTTTTTTTTTTTTT
-#  # tailType  read_type nA        rt
-#  # NA  60   one-tail 12 0.8571429
-#  # NA  84   one-tail 10 0.9090909
-#  # NA  292  one-tail 12 0.9230769
-#  # NA  352  one-tail  8 1.0000000
-#  # NA  394  one-tail  9 0.9000000
-#  # NA  402  one-tail 14 1.0000000
+#  #here dataset2 is subset of Dataset2 data
+#  data2.path <- system.file("extdata", "./GV_algin/dataset2_sort.bam", package = "PolyAtailor", mustWork = TRUE)
+#  D2 = tailMap(bamfile=data2.path,mcans=5,minTailLen=8,findUmi = F,longRead=F)
+#  head(D2[,1:4])
+#  #              read_num          chr strand     coord
+#  # 1  SRR5314571.1089513 NC_000001.11      -   8861006
+#  # 2 SRR5314571.11256375 NC_000001.11      -  96678784
+#  # 3 SRR5314571.12192933 NC_000001.11      -  96678784
+#  # 4 SRR5314571.12237630 NC_000001.11      -  96678791
+#  # 5 SRR5314571.12696790 NC_000001.11      - 121168671
+#  # 6 SRR5314571.13095118 NC_000001.11      -  96678784
+#  
+#  
+#  
 #  # 4.Poly(A) sites determination with PolyAtailor
 #  ## example
-#  library("BSgenome.Hsapiens.UCSC.hg38")
-#  library("TxDb.Hsapiens.UCSC.hg38.knownGene")
+#  library(BSgenome.Mmusculus.UCSC.mm10)
+#  #BiocManager::install("BSgenome.Mmusculus.UCSC.mm10")
+#  library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+#  #BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 #  bsgenome = BSgenome.Hsapiens.UCSC.hg38
 #  gffFile = TxDb.Hsapiens.UCSC.hg38.knownGene
-#  bamfile = "./dataset1.bam"
-#  chrinfo = "./chrinfo.txt"
+#  chrinfo = system.file("extdata", "./GV_algin/chrinfo.txt", package = "PolyAtailor", mustWork = TRUE)
 #  resultpath = "./result"
-#  pacD1 = findAndAnnoPAs(bamfile,chrinfo,resultpath,bsgenome,gffFile,sample="D1rep1",mergePAs=T)
+#  if(!dir.exists(resultpath)){
+#    dir.create(resultpath)
+#  }
+#  bamfile =system.file("extdata", "./GV_algin/GV1subseq.sorted.bam", package = "PolyAtailor", mustWork = TRUE)
+#  conflict_prefer("reduce", "IRanges")
+#  pacD1 = findAndAnnoPAs(chrinfo=chrinfo,bamfile=bamfile,
+#                         resultpath=resultpath,bsgenome=bsgenome,
+#                         gffFile=gffFile,sample="D1rep1",mergePAs=T,d=24)
+#  #For example only, please use another set of data
+#  pacD2 = ffindAndAnnoPAs(chrinfo=chrinfo,bamfile=bamfile,
+#                         resultpath=resultpath,bsgenome=bsgenome,
+#                         gffFile=gffFile,sample="D1rep2",mergePAs=T,d=24)
+
+## ----eval=FALSE---------------------------------------------------------------
+#  datalist = list(Batch1 = pacD1@anno, Batch2 = pacD2@anno)
+#  dev.off()
+#  p = batchCompare(datalist=datalist,format="upset",dimension="gene",mycolors=c("#be8ec4","#7ed321","#7ed167"))
+#  p
+#  library(VennDiagram)
+#  p = batchCompare(datalist=datalist,format="veen",dimension="gene",mycolors=c("#be8ec4","#7ed321"))
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  datalist = list(Batch1 = D1, Batch2 = D2)
-#  p = batchCompare(datalist,format="upset",dimension="gene",mycolors=c("#be8ec4","#7ed321"))
-#  p
-#  p = batchCompare(datalist,format="veen",dimension="gene",mycolors=c("#be8ec4","#7ed321"))
+#  p = batchCompare(datalist,format="bar",dimension="read",mycolors=c("#9bbfdc","#ab99c1"))
 #  p
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  p = batchCompare(datalist,dimension="read",mycolors=c("#9bbfdc","#ab99c1"))
-#  p
-
-## ----eval=FALSE---------------------------------------------------------------
-#  p = batchCompare(datalist,dimension="tail",mycolors=c("#f18687","#9bbfdc"),rep=T)
+#  datalist = list(Batch1 = D1, Batch2 = D2)
+#  BiocManager::install("PupillometryR")
+#  library(PupillometryR)
+#  library(ggthemes)
+#  p = batchCompare(datalist,format="bar",dimension="tail",mycolors=c("#f18687","#9bbfdc"),rep=F)
 #  p
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  PACdslist = list(Batch1 = pacD1, Batch2 = pacD2)
 #  p = batchCompare(PACdslist,dimension="PACds",findOvpPACds=T,annotateByKnownPAC=T,d=100)
-#  head(P[['OvpPACds']])
+#  head(p[['OvpPACds']])  #or head(p$OvpPACds)
 #  # pacD1 pacD2 Total1 Total2 Ovp1 Ovp2 Ovp1Pct Ovp2Pct
 #  # 1    1    1  31289 186626 2404 2775      8%      1%
 

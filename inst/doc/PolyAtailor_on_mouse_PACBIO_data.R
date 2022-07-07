@@ -12,9 +12,35 @@ knitr::opts_chunk$set(
 )
 
 ## ----setup--------------------------------------------------------------------
+#  conflict_prefer("Position", "ggplot2")
+#  conflict_prefer("filter", "dplyr")
+#  conflict_prefer("mutate", "dplyr")
+#  conflict_prefer("select", "dplyr")
+#  conflict_prefer("rename", "dplyr")
+#  conflict_prefer("summarise", "dplyr")
+#  conflict_prefer("rbind", "base")
+#  conflict_prefer("cbind", "base")
+#  conflict_prefer("strsplit", "base")
+#  conflict_prefer("count", "dplyr")
+#  conflict_prefer("list", "base")
+#  conflict_prefer("reduce", "IRanges")
+#  conflict_prefer("geom_bar", "ggplot2")
+#  conflict_prefer("first", "dplyr")
+#  conflict_prefer("combine", "dplyr")
+#  conflict_prefer("compose", "purrr")
+#  conflict_prefer("last", "dplyr")
+#  conflict_prefer("simplify", "purrr")
+#  conflict_prefer("%>%", "dplyr")
 #  library(polyAtailor)
+#  library(movAPA)
+#  #require(devtools)
+#  #install_github("BMILAB/movAPA")
 #  fastqfile <- system.file("extdata", "./GV_fastq/PAIso_GV1.fastq", package = "PolyAtailor", mustWork = TRUE)
-#  GV1tailDF<-tailScan(fastqfile,mcans=5,findUmi = F,resultpath = "./data/output/",samplename = "GV1",tailAnchorLen=8,minTailLen=8,realTailLen=20,maxNtail=2,mapping=F)
+#  resultpath = "./output"
+#  if(!dir.exists(resultpath)){
+#    dir.create(resultpath)
+#  }
+#  GV1tailDF<-tailScan(fastqfile,mcans=5,findUmi = F,resultpath = resultpath,samplename = "GV1",tailAnchorLen=8,minTailLen=8,realTailLen=20,maxNtail=2,mapping=F)
 #  head(GV1tailDF)
 #  #>read_num strand PAL tail tailType read_type nA rt
 #  #SRR8798075.11991 - 9  TTTTTTTTA     structural two-tail-mixed 8  0.89 GV1
@@ -38,9 +64,18 @@ knitr::opts_chunk$set(
 
 ## -----------------------------------------------------------------------------
 #  #step1
+#  #Tails and partial sequences were extracted from long reads and FASTA files were generated for alignment.
 #  fastqfile <- system.file("extdata", "./GV_fastq/PAIso_GV1.fastq", package = "PolyAtailor", mustWork = TRUE)
-#  faBuilderRE <- faBuilder(fastqfile,mcans=5,findUmi = F,resultpath = "./data/output/",samplename = "GV1",tailAnchorLen=8,mapping=F)
-#  
+#  library(seqRFLP)
+#  faBuilderRE <- faBuilder(fastqfile,mcans=5,findUmi = F,resultpath = resultpath ,samplename = "GV1",tailAnchorLen=8,mapping=F,findTailType="both")
+#  # > head(faBuilderRE[,c(1,2,3,5)])
+#  #                         read_num strand PAL tail       nA
+#  # 1: SRR8798075.1_unstructural_GV1      + 302 TTT...CCT 111
+#  # 2: SRR8798075.2_unstructural_GV1      + 225 TTT...ACT 131
+#  # 3: SRR8798075.3_unstructural_GV1      + 300 TTT...TCG 109
+#  # 4: SRR8798075.4_unstructural_GV1      + 314 TTT...ACA 142
+#  # 5: SRR8798075.5_unstructural_GV1      + 294 TTT...TCG 112
+#  # 6:   SRR8798075.6_structural_GV1      - 260 TTT...CTT 82
 #  #step2
 #    ##alignment with any aligner.
 #  
@@ -183,9 +218,11 @@ knitr::opts_chunk$set(
 
 ## -----------------------------------------------------------------------------
 #  data(GV1tailMapre)
+#  library(ggthemes)
+#  library(eoffice)
 #  p1 <- plotPALDistribution(GV1tailMapre,"./data/figures/","global",medianPAL=T)
 #  p1
-#  p2 <- plotPALDistribution(GV1tailMapre,"./data/figures/","gene",medianPAL=T)
+#  p2 <- plotPALDistribution(AnnotedTails,"./data/figures/","gene",medianPAL=T)
 #  p2
 
 ## -----------------------------------------------------------------------------
@@ -207,6 +244,7 @@ knitr::opts_chunk$set(
 
 ## -----------------------------------------------------------------------------
 #  data(AnnotedTails)
+#  library(stringi)
 #  re <- nonAanalysis(AnnotedTails)
 #  re$p1
 
@@ -217,10 +255,11 @@ knitr::opts_chunk$set(
 ## -----------------------------------------------------------------------------
 #  data(taildf)
 #  my_cutstom <- data.frame(names=c("A","C","T","G"),color=c("#3171A5","#4EAA4C","#C9C4C2","#D73D3D"))
+#  library(ggmsa)
 #  p <- tailViso(taildf,tailLen=100,Ntail=20,custom=my_cutstom,strand="-",faPath="D:/",showLogo=T,showReadNum= F)
 
 ## -----------------------------------------------------------------------------
-#  BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+#  #BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 #  library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 #  gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
 #  data(AnnotedTails)
