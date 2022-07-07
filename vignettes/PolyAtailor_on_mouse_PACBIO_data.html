@@ -397,6 +397,7 @@ start using PolyAtailor:</p>
 require(devtools)
 install_github(&quot;BMILAB/PolyAtailor&quot;)
 install_github(&quot;BMILAB/movAPA&quot;)
+library(conflicted)
 conflict_prefer(&quot;Position&quot;, &quot;ggplot2&quot;)
 conflict_prefer(&quot;filter&quot;, &quot;dplyr&quot;)
 conflict_prefer(&quot;mutate&quot;, &quot;dplyr&quot;)
@@ -426,7 +427,7 @@ the sequence tail information, Include at least
 read_num,tail,PAL,chr,strand,tailType,read_type and sample. The median
 length of all tails found by tailScan is 57nt, which is not far from the
 59nt reported in the original article.</p>
-<pre class="r"><code>library(polyAtailor)
+<pre class="r"><code>library(PolyAtailor)
 library(movAPA)
 #require(devtools)
 #install_github(&quot;BMILAB/movAPA&quot;)

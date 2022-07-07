@@ -21,6 +21,7 @@ vignette: >
 require(devtools)
 install_github("BMILAB/PolyAtailor")
 install_github("BMILAB/movAPA")
+library(conflicted)
 conflict_prefer("Position", "ggplot2")
 conflict_prefer("filter", "dplyr")
 conflict_prefer("mutate", "dplyr")
@@ -58,7 +59,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(polyAtailor)
+library(PolyAtailor)
 library(movAPA)
 #require(devtools)
 #install_github("BMILAB/movAPA")
