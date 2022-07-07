@@ -13,10 +13,11 @@ Imports: Biostrings, conflicted, data.table, DescTools, dplyr, eoffice,
         esquisse, GeneAnswers, GenomicRanges, GGally, ggmsa, ggplot2,
         ggpubr, ggsci, ggthemes, gridExtra, magrittr, movAPA, plotrix,
         purrr, remotes, Rsamtools, seqRFLP, ShortRead, sqldf, stringi,
-        stringr, tidyr, UpSetR, VennDiagram, RColorBrewer, pracma
+        stringr, tidyr, UpSetR, Rsamtools, VennDiagram,
+        TxDb.Athaliana.BioMart.plantsmart28, RColorBrewer, pracma
 Depends: R (>= 3.5.0), ggplot2, tidyverse, conflicted
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2022-07-06 02:45:06 UTC; 飞飞飞
+Packaged: 2022-07-07 09:47:20 UTC; yec
