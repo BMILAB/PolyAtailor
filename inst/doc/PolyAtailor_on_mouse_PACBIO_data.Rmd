@@ -16,26 +16,12 @@ vignette: >
 
   First, the GV rep1 data (SRR8798075) was downloaded from the NCBI database. The fastq format file contained a total of 63,732 reads, which are all ccs-processed reads and can be used directly for analysis. The tool for sequence alignment is minimap2 (with default parameters) and the reference genome is GRCm38(mm10). Once you have done this you can start using PolyAtailor:
 
-```{r}
+```{r eval=FALSE}
 # library(PolyAtailor)
-```
-    
-## 3. Quantitative poly(A) tail with tailScan
-
-  All analyses will start with quantitativing the poly(A) tail. The input to this step is a fastq format file containing reads that have been processed by ccs, and the output will be a dataframe containing all the sequence tail information, Include at least read_num,tail,PAL,chr,strand,tailType,read_type and sample. The median length of all tails found by tailScan is 57nt, which is not far from the 59nt reported in the original article.
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  warning = F,
-  fig.width = 6, 
-  fig.height = 6,
-  eval=FALSE
-)
-```
-
-```{r setup}
+require(devtools)
+install_github("BMILAB/PolyAtailor")
+install_github("BMILAB/movAPA")
+library(conflicted)
 conflict_prefer("Position", "ggplot2")
 conflict_prefer("filter", "dplyr")
 conflict_prefer("mutate", "dplyr")
@@ -55,7 +41,25 @@ conflict_prefer("compose", "purrr")
 conflict_prefer("last", "dplyr")
 conflict_prefer("simplify", "purrr")
 conflict_prefer("%>%", "dplyr")
-library(polyAtailor)
+```
+    
+## 3. Quantitative poly(A) tail with tailScan
+
+  All analyses will start with quantitativing the poly(A) tail. The input to this step is a fastq format file containing reads that have been processed by ccs, and the output will be a dataframe containing all the sequence tail information, Include at least read_num,tail,PAL,chr,strand,tailType,read_type and sample. The median length of all tails found by tailScan is 57nt, which is not far from the 59nt reported in the original article.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = F,
+  fig.width = 6, 
+  fig.height = 6,
+  eval=FALSE
+)
+```
+
+```{r setup}
+library(PolyAtailor)
 library(movAPA)
 #require(devtools)
 #install_github("BMILAB/movAPA")
@@ -150,7 +154,7 @@ head(GV1tailMapre)
 # 6 structural  one-tail 57 1.000000    GV1
 
 #step4
-BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+#BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 data(GV1tailDF)
 data(GV1tailMapre)
@@ -232,7 +236,6 @@ head(GV1tailMapre)
 BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 data(GV1tailDF)
-data()
 AnnotedTails = geneAnno(tailDF=GV1tailDF,bamdf=GV1tailMapre,GFF=TxDb.Mmusculus.UCSC.mm10.knownGene,longRead=F)
 head(AnnotedTails)
 #           read_num   chr strand   gene gene_type PAL
@@ -266,14 +269,14 @@ head(AnnotedTails)
 
 ```{r}
 # Deciphering gff files
-BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+#BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 # Deciphering genome files
-BiocManager::install("BSgenome.Mmusculus.UCSC.mm10")
+#BiocManager::install("BSgenome.Mmusculus.UCSC.mm10")
 library("BSgenome.Mmusculus.UCSC.mm10")
 bsgenome = BSgenome.Mmusculus.UCSC.mm10
 # Prepare the input file
- bamfilepath = system.file("extdata", "./GV_algin/PAIso-GV1.sorted.bam", package = "PolyAtailor", mustWork = TRUE)
+bamfilepath = system.file("extdata", "./GV_algin/PAIso-GV1.sorted.bam", package = "PolyAtailor", mustWork = TRUE)
 chrinfopath = system.file("extdata", "./GV_algin/chrinfo.txt", package = "PolyAtailor", mustWork = TRUE)
 resultpath = "./"
 # Annotated PA site
@@ -281,7 +284,7 @@ PAs <- findAndAnnoPAs(bamfile=bamfilepath,chrinfo=chrinfopath,resultpath=resultp
 
 ```
 
-<img src="./figures/a1.png" alt="MarineGEO circle logo" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br/>
+<img src="./figures/1.png" alt="MarineGEO circle logo" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br/>
 
 ## 6. distribution of poly(A) tail length
 
@@ -298,7 +301,7 @@ p2 <- plotPALDistribution(AnnotedTails,"./data/figures/","gene",medianPAL=T)
 p2
 ```
 
-<img src="./figures/a2.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br>    
+<img src="./figures/2.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br>    
    
 ## 7. PA sites analysis
 
@@ -313,7 +316,7 @@ p <- plotPADistribution(PAs,"./data/figures/","#9BBFDC")
 p
 ```
 
-<img src="./figures/a3.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br>   
+<img src="./figures/3.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br>   
 
   **(2) The gene frequency with different number of PA sites**  
   The plot function *plotGenePAnumbers* will plot the gene frequency distribution with different number of PA sites.  

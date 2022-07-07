@@ -33,7 +33,7 @@ knitr::opts_chunk$set(
 # 2.Align sequences and convert file formats
 # 3.Quantitativing poly(A) tails with PolyAtailor
 rm(list=ls())
-library(polyAtailor)
+library(PolyAtailor)
 #require(devtools)
 #install_github("BMILAB/movAPA")
 library(movAPA)
