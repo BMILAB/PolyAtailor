@@ -4,12 +4,21 @@
 \alias{batchCompare}
 \title{batchCompare}
 \usage{
-batchCompare(datalist,"upset","read",mycolors=c("#b681bd","#377eb8"))
+batchCompare(
+  datalist,
+  format,
+  dimension,
+  mycolors,
+  rep,
+  findOvpPACds,
+  annotateByKnownPAC,
+  d
+)
 }
 \arguments{
 \item{datalist}{Multiple sets of analysis results stored in list format.}
 
-\item{format}{Plot format, "upset" or "veen".}
+\item{format}{Plot format, "upset" or "veen" or "bar".}
 
 \item{dimension}{The dimension to compare, "gene", "tail", "PACds" or "read".}
 
@@ -41,4 +50,7 @@ The batchCompare function provides the ability to quickly compare
   multiple different datasets, such as one from NGS sequencing technology and
   another from PACBIO sequencing technology. batchCompare provides three
   comparable dimensions, namely "gene", "tail", "PACds" or "read".
+}
+\examples{
+batchCompare(datalist,"upset","read",mycolors=c("#b681bd","#377eb8"))
 }

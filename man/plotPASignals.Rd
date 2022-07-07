@@ -34,21 +34,6 @@ plot the probability distribution of the occurrence of
 \examples{
 library("BSgenome.Mmusculus.UCSC.mm10")
 bsgenome = BSgenome.Mmusculus.UCSC.mm10
-data(PAs)
-p <- plotPASignals(PAs,"./",bsgenome = bsgenome)
+load("./data/output/PAs.RData")
+p <- plotPASignals(PAs,"./inst/extdata/figures/",bsgenome = bsgenome)
 }
-\seealso{
-[plotGenePAnumbers()] to plot the gene frequency distribution with
-  different number of PA sites.
-
-Other Visualization functions: 
-\code{\link{DSA_UpsetPlot}()},
-\code{\link{DSA_ViolinPlot}()},
-\code{\link{PALdsa}()},
-\code{\link{nonAanalysis}()},
-\code{\link{plotGenePAnumbers}()},
-\code{\link{plotPADistribution}()},
-\code{\link{plotPALDistribution}()},
-\code{\link{tailViso}()}
-}
-\concept{Visualization functions}

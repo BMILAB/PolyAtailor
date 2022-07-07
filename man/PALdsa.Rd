@@ -53,18 +53,11 @@ The poly(A) tail length of genes with two PACs was analyzed for
   annotate PACs as the proximal PA site and the distal PA site before
   conducting the significance analysis of tail length difference.
 }
-\seealso{
-[DSA_ViolinPlot()] to draw a violin diagram of the result of
-  differential tail length analysis.
-
-Other Visualization functions: 
-\code{\link{DSA_UpsetPlot}()},
-\code{\link{DSA_ViolinPlot}()},
-\code{\link{nonAanalysis}()},
-\code{\link{plotGenePAnumbers}()},
-\code{\link{plotPADistribution}()},
-\code{\link{plotPALDistribution}()},
-\code{\link{plotPASignals}()},
-\code{\link{tailViso}()}
+\examples{
+BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
+load("./data/AnnotedTails.RData")
+PAs <- read.table("./inst/extdata/output/PAs/PAs.txt",header=T,sep=" ")
+diffPAL2PAgenes <- PALdsa(PAs,AnnotedTails,gff,mode="PD",SAoDMethod="ME",withViolinPlot=T,withUpsetPlot=F)
 }
-\concept{Visualization functions}

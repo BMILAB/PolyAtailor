@@ -4,7 +4,7 @@
 \alias{DSA_ViolinPlot}
 \title{DSA_ViolinPlot}
 \usage{
-p <- DSA_ViolinPlot(DSA_result)
+DSA_ViolinPlot(DSA_result, SAoDMethod)
 }
 \arguments{
 \item{DSA_result}{The output of PALdsa().}
@@ -24,18 +24,12 @@ The tail length difference analysis results of the four difference
   tail length distribution under different conditions is represented by
   different colors to facilitate users to view the differences.
 }
-\seealso{
-[DSA_UpsetPlot()] to draw a Upset diagram of the result of
-  differential tail length analysis.
-
-Other Visualization functions: 
-\code{\link{DSA_UpsetPlot}()},
-\code{\link{PALdsa}()},
-\code{\link{nonAanalysis}()},
-\code{\link{plotGenePAnumbers}()},
-\code{\link{plotPADistribution}()},
-\code{\link{plotPALDistribution}()},
-\code{\link{plotPASignals}()},
-\code{\link{tailViso}()}
+\examples{
+BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
+load("./data/AnnotedTails.RData")
+PAs <- read.table("./inst/extdata/output/PAs/PAs.txt",header=T,sep=" ")
+DSA_result <- PALdsa(PAs,AnnotedTails,gff,mode="PD",SAoDMethod="ME",withViolinPlot=T,withUpsetPlot=F)
+p <- DSA_ViolinPlot(DSA_result,SAoDMethod="KS")
 }
-\concept{Visualization functions}

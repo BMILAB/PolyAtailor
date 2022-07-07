@@ -40,24 +40,7 @@ Visualize the tail input by the user so that the base composition of
   different tails can be compared intuitively.
 }
 \examples{
-library(ggmsa)
-library(seqRFLP)
-data(taildf)
+load(./data/taildf.RData)
 my_cutstom <- data.frame(names=c("A","C","T","G"),color=c("#3171A5","#4EAA4C","#C9C4C2","#D73D3D"))
 p <- tailViso(taildf,tailLen=100,Ntail=20,custom=my_cutstom,strand="-",faPath="D:/",showLogo=T,showReadNum= F)
 }
-\seealso{
-[DSA_ViolinPlot()] to draw a violin diagram of the result of
-  differential tail length analysis.
-
-Other Visualization functions: 
-\code{\link{DSA_UpsetPlot}()},
-\code{\link{DSA_ViolinPlot}()},
-\code{\link{PALdsa}()},
-\code{\link{nonAanalysis}()},
-\code{\link{plotGenePAnumbers}()},
-\code{\link{plotPADistribution}()},
-\code{\link{plotPALDistribution}()},
-\code{\link{plotPASignals}()}
-}
-\concept{Visualization functions}

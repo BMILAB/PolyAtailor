@@ -27,21 +27,6 @@ Plot the gene frequency distribution with different number of PA
   PA sites 1, 2, 3, 4, 5 and greater than 5, respectively.
 }
 \examples{
-data(PAs)
-p <- plotGenePAnumbers(PAs,"./","#DF7C7D")
+load("./data/output/PAs.RData")
+p <- plotGenePAnumbers(PAs,"./inst/extdata/figures/","#DF7C7D")
 }
-\seealso{
-[plotGenePAnumbers()] to plot the gene frequency distribution with
-  different number of PA sites.
-
-Other Visualization functions: 
-\code{\link{DSA_UpsetPlot}()},
-\code{\link{DSA_ViolinPlot}()},
-\code{\link{PALdsa}()},
-\code{\link{nonAanalysis}()},
-\code{\link{plotPADistribution}()},
-\code{\link{plotPALDistribution}()},
-\code{\link{plotPASignals}()},
-\code{\link{tailViso}()}
-}
-\concept{Visualization functions}

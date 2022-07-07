@@ -27,21 +27,6 @@ Plot the gene region distribution of PA sites, including "3UTR",
   locus distribution barpllot in PPTX format to the path you specified.
 }
 \examples{
-data(PAs)
-p <- plotPADistribution(PAs,"./","#9BBFDC")
+load("./data/output/PAs.RData")
+p <- plotPADistribution(PAs,"./inst/extdata/figures/","#9BBFDC")
 }
-\seealso{
-[plotGenePAnumbers()] to plot the gene frequency distribution with
-  different number of PA sites.
-
-Other Visualization functions: 
-\code{\link{DSA_UpsetPlot}()},
-\code{\link{DSA_ViolinPlot}()},
-\code{\link{PALdsa}()},
-\code{\link{nonAanalysis}()},
-\code{\link{plotGenePAnumbers}()},
-\code{\link{plotPALDistribution}()},
-\code{\link{plotPASignals}()},
-\code{\link{tailViso}()}
-}
-\concept{Visualization functions}

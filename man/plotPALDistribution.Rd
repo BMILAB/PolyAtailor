@@ -33,21 +33,7 @@ Using the PoltPAL family of functions, the tail length distribution
   global tail length distribution.
 }
 \examples{
-data(AnnotedTails)
-p1 <- plotPALDistribution(AnnotedTails,"./","global",medianPAL=T)
-p2 <- plotPALDistribution(AnnotedTails,"./","gene",medianPAL=T)
+load("./data/output/AnnotatedTails.RData")
+p1 <- plotPALDistribution(AnnotedTails,"./inst/extdata/figures/","global",medianPAL=T)
+p2 <- plotPALDistribution(AnnotedTails,"./inst/extdata/figures/","gene",medianPAL=T)
 }
-\seealso{
-[plotPADistribution()] to plot the gene region distribution of PA sites.
-
-Other Visualization functions: 
-\code{\link{DSA_UpsetPlot}()},
-\code{\link{DSA_ViolinPlot}()},
-\code{\link{PALdsa}()},
-\code{\link{nonAanalysis}()},
-\code{\link{plotGenePAnumbers}()},
-\code{\link{plotPADistribution}()},
-\code{\link{plotPASignals}()},
-\code{\link{tailViso}()}
-}
-\concept{Visualization functions}

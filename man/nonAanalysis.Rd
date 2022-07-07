@@ -29,25 +29,10 @@ After users input the tail information table, we will quantify the
   sample.
 }
 \examples{
-library(stringi)
-data(AnnotedTails)
+load("./data/AnnotatedTails.RData")
 re <- nonAanalysis(AnnotedTails)
 re$p1
 re$p2
 re$p3
 nonAre <- re$nonAinfo
 }
-\seealso{
-[tailViso()] to visualize tails using heat maps and logos.
-
-Other Visualization functions: 
-\code{\link{DSA_UpsetPlot}()},
-\code{\link{DSA_ViolinPlot}()},
-\code{\link{PALdsa}()},
-\code{\link{plotGenePAnumbers}()},
-\code{\link{plotPADistribution}()},
-\code{\link{plotPALDistribution}()},
-\code{\link{plotPASignals}()},
-\code{\link{tailViso}()}
-}
-\concept{Visualization functions}

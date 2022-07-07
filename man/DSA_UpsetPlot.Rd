@@ -4,7 +4,7 @@
 \alias{DSA_UpsetPlot}
 \title{DSA_UpsetPlot}
 \usage{
-p <- DSA_UpsetPlot(DSA_result)
+DSA_UpsetPlot(DSA_result)
 }
 \arguments{
 \item{DSA_result}{The output of PALdsa().}
@@ -23,18 +23,12 @@ Overlapping analysis of the results of differential tail length
   highly confident. The consensus results of the four methods are marked in
   red to represent highly confident tail length genes.
 }
-\seealso{
-[DSA_ViolinPlot()] to draw a violin diagram of the result of
-  differential tail length analysis.
-
-Other Visualization functions: 
-\code{\link{DSA_ViolinPlot}()},
-\code{\link{PALdsa}()},
-\code{\link{nonAanalysis}()},
-\code{\link{plotGenePAnumbers}()},
-\code{\link{plotPADistribution}()},
-\code{\link{plotPALDistribution}()},
-\code{\link{plotPASignals}()},
-\code{\link{tailViso}()}
+\examples{
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
+data(AnnotedTails)
+files = system.file("extdata", "./output/PAs/PAs.txt", package = "PolyAtailor", mustWork = TRUE)
+PAs <- read.table(files,header=TRUE,sep=" ")
+DSA_result <- PALdsa(PAdf=PAs,PALdf=AnnotedTails,d=24,gff=gff,mode="PD",SAoDMethod="ME",withViolinPlot=T,withUpsetPlot=F)
+p <- DSA_UpsetPlot(DSA_result)
 }
-\concept{Visualization functions}

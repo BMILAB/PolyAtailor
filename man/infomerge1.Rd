@@ -4,9 +4,7 @@
 \alias{infomerge1}
 \title{infomerge1}
 \usage{
-tailinfo = "the/path/of/tailinfo.txt"
-PAinfo = "the/path/of/PAinfo.txt"
-finaldata <- infomerge1(tailinfo,PAinfo)
+infomerge1(tailinfo, PAinfo)
 }
 \arguments{
 \item{tailinfo}{A dataframe that contains the tail information of all reads.}
@@ -25,4 +23,9 @@ Although we have identified the PA site and tail information for
   each sequence, the two tables are currently independent. We need to use
   the common column (reads_num) of the two tables to merge the data to
   produce the final data table.
+}
+\examples{
+tailinfo = "the/path/of/tailinfo.txt"
+PAinfo = "the/path/of/PAinfo.txt"
+finaldata <- infomerge1(tailinfo,PAinfo)
 }
