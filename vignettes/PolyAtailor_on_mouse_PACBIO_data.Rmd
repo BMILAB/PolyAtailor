@@ -294,6 +294,7 @@ PAs <- findAndAnnoPAs(bamfile=bamfilepath,chrinfo=chrinfopath,resultpath=resultp
 data(GV1tailMapre)
 library(ggthemes)
 library(eoffice)
+dev.off()
 p1 <- plotPALDistribution(GV1tailMapre,"./","global",medianPAL=T)
 p1
 p2 <- plotPALDistribution(AnnotedTails,"./","gene",medianPAL=T)
