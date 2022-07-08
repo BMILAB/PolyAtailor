@@ -410,10 +410,26 @@ library(movAPA)
 library(Rsamtools)
 #BiocManager::install(&quot;Rsamtools&quot;)
 #Persistently prefer one function over anothe, in case
-conflict_prefer_all(&quot;PolyAtailor&quot;, &quot;dplyr&quot;)
-conflict_prefer_all(&quot;PolyAtailor&quot;, &quot;IRanges&quot;)
+library(conflicted)
+conflict_prefer(&quot;Position&quot;, &quot;ggplot2&quot;)
+conflict_prefer(&quot;filter&quot;, &quot;dplyr&quot;)
+conflict_prefer(&quot;mutate&quot;, &quot;dplyr&quot;)
+conflict_prefer(&quot;select&quot;, &quot;dplyr&quot;)
+conflict_prefer(&quot;rename&quot;, &quot;dplyr&quot;)
 conflict_prefer(&quot;summarise&quot;, &quot;dplyr&quot;)
-
+conflict_prefer(&quot;rbind&quot;, &quot;base&quot;)
+conflict_prefer(&quot;cbind&quot;, &quot;base&quot;)
+conflict_prefer(&quot;strsplit&quot;, &quot;base&quot;)
+conflict_prefer(&quot;count&quot;, &quot;dplyr&quot;)
+conflict_prefer(&quot;list&quot;, &quot;base&quot;)
+conflict_prefer(&quot;reduce&quot;, &quot;IRanges&quot;)
+conflict_prefer(&quot;geom_bar&quot;, &quot;ggplot2&quot;)
+conflict_prefer(&quot;first&quot;, &quot;dplyr&quot;)
+conflict_prefer(&quot;combine&quot;, &quot;dplyr&quot;)
+conflict_prefer(&quot;compose&quot;, &quot;purrr&quot;)
+conflict_prefer(&quot;last&quot;, &quot;dplyr&quot;)
+conflict_prefer(&quot;simplify&quot;, &quot;purrr&quot;)
+conflict_prefer(&quot;%&gt;%&quot;, &quot;dplyr&quot;)
 ## For full-length sequences the longRead parameter is set to T
 #here dataset1 is subset of Dataset1 data
 data1.path &lt;- system.file(&quot;extdata&quot;, &quot;./GV_algin/d1_subset.bam&quot;, package = &quot;PolyAtailor&quot;, mustWork = TRUE)
@@ -461,7 +477,7 @@ pacD1 = findAndAnnoPAs(chrinfo=chrinfo,bamfile=bamfile,
                        resultpath=resultpath,bsgenome=bsgenome,
                        gffFile=gffFile,sample=&quot;D1rep1&quot;,mergePAs=T,d=24)
 #For example only, please use another set of data
-pacD2 = ffindAndAnnoPAs(chrinfo=chrinfo,bamfile=bamfile,
+pacD2 = findAndAnnoPAs(chrinfo=chrinfo,bamfile=bamfile,
                        resultpath=resultpath,bsgenome=bsgenome,
                        gffFile=gffFile,sample=&quot;D1rep2&quot;,mergePAs=T,d=24)</code></pre>
 </div>

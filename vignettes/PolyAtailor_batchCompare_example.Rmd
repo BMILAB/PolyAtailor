@@ -40,10 +40,26 @@ library(movAPA)
 library(Rsamtools)
 #BiocManager::install("Rsamtools")
 #Persistently prefer one function over anothe, in case
-conflict_prefer_all("PolyAtailor", "dplyr")
-conflict_prefer_all("PolyAtailor", "IRanges")
+library(conflicted)
+conflict_prefer("Position", "ggplot2")
+conflict_prefer("filter", "dplyr")
+conflict_prefer("mutate", "dplyr")
+conflict_prefer("select", "dplyr")
+conflict_prefer("rename", "dplyr")
 conflict_prefer("summarise", "dplyr")
-
+conflict_prefer("rbind", "base")
+conflict_prefer("cbind", "base")
+conflict_prefer("strsplit", "base")
+conflict_prefer("count", "dplyr")
+conflict_prefer("list", "base")
+conflict_prefer("reduce", "IRanges")
+conflict_prefer("geom_bar", "ggplot2")
+conflict_prefer("first", "dplyr")
+conflict_prefer("combine", "dplyr")
+conflict_prefer("compose", "purrr")
+conflict_prefer("last", "dplyr")
+conflict_prefer("simplify", "purrr")
+conflict_prefer("%>%", "dplyr")
 ## For full-length sequences the longRead parameter is set to T
 #here dataset1 is subset of Dataset1 data
 data1.path <- system.file("extdata", "./GV_algin/d1_subset.bam", package = "PolyAtailor", mustWork = TRUE)
@@ -91,7 +107,7 @@ pacD1 = findAndAnnoPAs(chrinfo=chrinfo,bamfile=bamfile,
                        resultpath=resultpath,bsgenome=bsgenome,
                        gffFile=gffFile,sample="D1rep1",mergePAs=T,d=24)
 #For example only, please use another set of data
-pacD2 = ffindAndAnnoPAs(chrinfo=chrinfo,bamfile=bamfile,
+pacD2 = findAndAnnoPAs(chrinfo=chrinfo,bamfile=bamfile,
                        resultpath=resultpath,bsgenome=bsgenome,
                        gffFile=gffFile,sample="D1rep2",mergePAs=T,d=24)
 ```   
