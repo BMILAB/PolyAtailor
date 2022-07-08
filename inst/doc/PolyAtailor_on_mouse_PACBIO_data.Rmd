@@ -1,0 +1,403 @@
+---
+title: "<center>Poly (A) tail analysis of full-length sequencing data of mouse GV oocytes using PolyAtailor package</center>"
+author: "<center>Mengfei Liu lmfff@stu.xmu.edu.cn</center>"
+date: "<center>Last modified `r Sys.Date()`</center>"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{<center>Poly (A) tail analysis of full-length sequencing data of mouse GV oocytes using PolyAtailor package</center>}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+## 1. Overview
+
+  Here, we will use the PACBIO sequencing data from the mouse GV oocytes cell line published by Yusheng Liu et al. to demonstrate the key functions of PolyAtailor. This includes tail quantification without reference genome, reference genome-based tail quantification, PA site identification and annotation, analysis of base composition in Poly(A) tails and analysis of the significance of differences in Poly(A) tail length under different conditions.
+    
+## 2. Preparation
+
+  First, the GV rep1 data (SRR8798075) was downloaded from the NCBI database. The fastq format file contained a total of 63,732 reads, which are all ccs-processed reads and can be used directly for analysis. The tool for sequence alignment is minimap2 (with default parameters) and the reference genome is GRCm38(mm10). Once you have done this you can start using PolyAtailor:
+
+```{r}
+# library(PolyAtailor)
+```
+    
+## 3. Quantitative poly(A) tail with tailScan
+
+  All analyses will start with quantitativing the poly(A) tail. The input to this step is a fastq format file containing reads that have been processed by ccs, and the output will be a dataframe containing all the sequence tail information, Include at least read_num,tail,PAL,chr,strand,tailType,read_type and sample. The median length of all tails found by tailScan is 57nt, which is not far from the 59nt reported in the original article.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = F,
+  fig.width = 6, 
+  fig.height = 6,
+  eval=FALSE
+)
+```
+
+```{r setup}
+library(conflicted)
+conflict_prefer("Position", "ggplot2")
+conflict_prefer("filter", "dplyr")
+conflict_prefer("mutate", "dplyr")
+conflict_prefer("select", "dplyr")
+conflict_prefer("rename", "dplyr")
+conflict_prefer("summarise", "dplyr")
+conflict_prefer("rbind", "base")
+conflict_prefer("cbind", "base")
+conflict_prefer("strsplit", "base")
+conflict_prefer("count", "dplyr")
+conflict_prefer("list", "base")
+conflict_prefer("reduce", "IRanges")
+conflict_prefer("geom_bar", "ggplot2")
+conflict_prefer("first", "dplyr")
+conflict_prefer("combine", "dplyr")
+conflict_prefer("compose", "purrr")
+conflict_prefer("last", "dplyr")
+conflict_prefer("simplify", "purrr")
+conflict_prefer("%>%", "dplyr")
+library(PolyAtailor)
+library(movAPA)
+#require(devtools)
+#install_github("BMILAB/movAPA")
+library(Rsamtools)
+#BiocManager::install("Rsamtools")
+fastqfile <- system.file("extdata", "./GV_fastq/PAIso_GV1_subset.fastq", package = "PolyAtailor", mustWork = TRUE)
+resultpath = "./output"
+if(!dir.exists(resultpath)){
+  dir.create(resultpath)
+}
+GV1tailDF<-tailScan(fastqfile,mcans=5,findUmi = F,resultpath = resultpath,samplename = "GV1",tailAnchorLen=8,minTailLen=8,realTailLen=20,maxNtail=2,mapping=F)
+head(GV1tailDF)
+#>read_num strand PAL tail tailType read_type nA rt
+#SRR8798075.11991 - 9  TTTTTTTTA     structural two-tail-mixed 8  0.89 GV1
+#SRR8798075.11991 + 24 TTTTT...ATTGT structural two-tail-mixed 19 0.79 GV1
+#SRR8798075.12051 - 13 TTTTTTTTTTTTT structural two-tail-mixed 13 1.00 GV1
+#SRR8798075.12051 + 57 TTTTT...TTTTG structural two-tail-mixed 56 0.98 GV1
+#SRR8798075.12545 - 28 TTTTT...TGCTT structural two-tail-mixed 21 0.75 GV1
+#SRR8798075.12545 + 15 TTTTT...GATCT structural two-tail-mixed 12 0.80 GV1
+median(GV1tailDF$PAL)
+# [1] 57
+```
+
+## 4. Quantitative poly(A) tail with tailMap
+
+### 4.1 Use tailMap to correct the result of tailScan    
+
+  All analyses will start with quantitativing the poly(A) tail. The input to this tailMap step is a bam file after alignment, and the output will be a dataframe containing all the sequence tail information, Include at least read_num,tail,PAL,chr,coord,strand,tailType,read_type and sample.There are four steps in the tail extraction using the alignment method. The median length of all tails found by tailScan is 59nt.  
+    
+  **(1) Sequence interception**  
+  This step will extract the tail from the original sequence and the 200bp sequence around it, generate a FASTA file and save it to the location specified by the user.  
+    
+  **(2) Sequence alignment**  
+  Align the sequence obtained in the previous step to the reference genome.  
+    
+  **(3) Tail extract**  
+  Extract accurate tail information from BAM files after alignment.  
+    
+  **(4) Gene annotation**  
+  Annotate the genetic information for each tail. This step is optional because subsequent annotation of the PA sites can still obtain the genetic information.
+    
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = F,
+  fig.width = 6, 
+  fig.height = 6,
+  eval=FALSE
+)
+```
+
+```{r}
+#step1
+#Tails and partial sequences were extracted from long reads and FASTA files were generated for alignment.
+fastqfile <- system.file("extdata", "./GV_fastq/PAIso_GV1_subset.fastq", package = "PolyAtailor", mustWork = TRUE)
+library(seqRFLP)
+faBuilderRE <- faBuilder(fastqfile,mcans=5,findUmi = F,resultpath = resultpath ,samplename = "GV1",tailAnchorLen=8,mapping=F,findTailType="both")
+# > head(faBuilderRE[,c(1,2,3,5)])
+#                         read_num strand PAL tail       nA
+# 1: SRR8798075.1_unstructural_GV1      + 302 TTT...CCT 111
+# 2: SRR8798075.2_unstructural_GV1      + 225 TTT...ACT 131
+# 3: SRR8798075.3_unstructural_GV1      + 300 TTT...TCG 109
+# 4: SRR8798075.4_unstructural_GV1      + 314 TTT...ACA 142
+# 5: SRR8798075.5_unstructural_GV1      + 294 TTT...TCG 112
+# 6:   SRR8798075.6_structural_GV1      - 260 TTT...CTT 82
+#step2
+  ##alignment with any aligner.
+  
+#step3
+bamfile <- system.file("extdata", "./GV_algin/GV1subseq.sorted.bam", package = "PolyAtailor", mustWork = TRUE)
+GV1tailMapre<-tailMap(bamfile,mcans=5,minTailLen=8,findUmi = F,longRead=T)
+head(GV1tailMapre)
+#           read_num                   chr strand coord PAL
+# 1  SRR8798075.1004  ENSMUST00000009039.6      -   326  69
+# 2 SRR8798075.10180 ENSMUST00000100052.11      -  3273   8
+# 3 SRR8798075.10187  ENSMUST00000141115.8      +  9913  10
+# 4 SRR8798075.10190  ENSMUST00000139787.8      -   296  40
+# 5 SRR8798075.10378 ENSMUST00000055131.13      -  3224  63
+# 6 SRR8798075.10430  ENSMUST00000209034.2      -  1661  57
+#                                                                    tail
+# 1 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 2                                                              TTTTTTTT
+# 3                                                            TTTTTTTTTT
+# 4                              TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 5       TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTATT
+# 6             TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+#     tailType read_type nA       rt sample
+# 1 structural  one-tail 69 1.000000    GV1
+# 2 structural  one-tail  8 1.000000    GV1
+# 3 structural  one-tail 10 1.000000    GV1
+# 4 structural  one-tail 40 1.000000    GV1
+# 5 structural  one-tail 62 0.984127    GV1
+# 6 structural  one-tail 57 1.000000    GV1
+
+#step4
+#BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+data(GV1tailDF)
+data(GV1tailMapre)
+AnnotedTails = geneAnno(tailDF=GV1tailDF,bamdf=GV1tailMapre,GFF=TxDb.Mmusculus.UCSC.mm10.knownGene,longRead=F)
+head(AnnotedTails)
+#           read_num   chr strand  gene gene_type PAL
+# 1 SRR8798075.10543  chr3      - 72007      <NA>  11
+# 2 SRR8798075.10543  chr3      - 72007      <NA>  17
+# 3 SRR8798075.11063 chr10      + 69412      <NA>  89
+# 4 SRR8798075.13407 chr14      - 12159      <NA>  89
+# 5 SRR8798075.14401 chr14      - 12159      <NA>  43
+# 6 SRR8798075.14401 chr14      - 12159      <NA> 119
+#   tail
+# 1 TTTTTTTTTTT
+# 2 TTTTTTTTTTTTTTTTT
+# 3 TTTTTTT...TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 4 TTTTTTT...TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 5 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTGCT
+# 6 TTTTTTT...TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTGTGCTTTGCTTTACTTTC
+#       tailType      read_type  nA        rt sample
+# 1   structural two-tail-mixed  11 1.0000000    GV1
+# 2   structural two-tail-mixed  17 1.0000000    GV1
+# 3   structural       one-tail  89 1.0000000    GV1
+# 4   structural       one-tail  89 1.0000000    GV1
+# 5   structural  two-tail-same  41 0.9534884    GV1
+# 6 unstructural  two-tail-same 111 0.9327731    GV1
+```
+    
+    
+### 4.2 Use tailMap directly    
+
+  In order to facilitate users to extract poly(A) tails more quickly, the tailMap function also supports directly inputting the aligned bam format file for poly(A) tail analysis, but only if the bam file contains the cigar field. We also take GV rep1 data as an example, and directly input the aligned bam file into the tailMap function for tail quantification.  
+    
+  **(1) Tail extract**   
+  Extract accurate tail information from BAM files directly.  
+    
+  **(2) Gene annotation**  
+  Annotate the genetic information for each tail. 
+  
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = F,
+  fig.width = 6, 
+  fig.height = 6,
+  eval=FALSE
+)
+```
+
+```{r}
+#step1
+bamfile <- system.file("extdata", "./GV_algin/PAIso-GV1.sorted.bam", package = "PolyAtailor", mustWork = TRUE)
+GV1tailMapre<-tailMap(bamfile,mcans=5,minTailLen=8,findUmi = F,longRead=T)
+head(GV1tailMapre)
+#           read_num   chr strand     coord PAL
+# 1 SRR8798075.15955  chrM      +      5185  11
+# 2  SRR8798075.2473 chr11      +  59211415  55
+# 3 SRR8798075.26425  chr6      - 114079037  11
+# 4 SRR8798075.32952  chr2      - 153826328  25
+# 5 SRR8798075.33179  chr2      + 161287180  14
+# 6 SRR8798075.33206  chr9      -  56438002  33
+#                                                      tail
+# 1                                             TTTTTTTTTTT
+# 2 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 3                                             TTTTTTTTTTT
+# 4                               TTTTTTTTTTTTTTTTTTTTTTTTT
+# 5                                          TTTTTTTTTTTTAT
+# 6                       TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTAT
+#     tailType read_type nA       rt sample
+# 1 structural  one-tail 11 1.000000    GV1
+# 2 structural  one-tail 55 1.000000    GV1
+# 3 structural  one-tail 11 1.000000    GV1
+# 4 structural  one-tail 25 1.000000    GV1
+# 5 structural  one-tail 13 0.984127    GV1
+# 6 structural  one-tail 32 1.000000    GV1
+
+#step2
+#BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+data(GV1tailDF)
+AnnotedTails = geneAnno(tailDF=GV1tailDF,bamdf=GV1tailMapre,GFF=TxDb.Mmusculus.UCSC.mm10.knownGene,longRead=F)
+head(AnnotedTails)
+#           read_num   chr strand   gene gene_type PAL
+# 1  SRR8798075.2473 chr11      +  67862      <NA>  55
+# 2  SRR8798075.2473 chr11      +  67862      <NA> 116
+# 3 SRR8798075.32952  chr2      -  76407      <NA>  31
+# 4 SRR8798075.38605  chr1      +  12839      <NA>  71
+# 5 SRR8798075.58329  chr6      + 208665      <NA>  45
+# 6 SRR8798075.58329  chr6      + 208665      <NA>  98
+#   tail
+# 1 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 2 TTTTTTT...TTCTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 3 TTTTTTTTTTTTTTTTTTTTTTTTTTTTGGT
+# 4 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTATGTATTA
+# 5 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+# 6 TTTTTTT...TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+#       tailType      read_type  nA        rt sample
+# 1   structural two-tail-mixed  55 1.0000000    GV1
+# 2 unstructural two-tail-mixed 115 0.9913793    GV1
+# 3   structural       one-tail  29 0.9354839    GV1
+# 4   structural       one-tail  67 0.9436620    GV1
+# 5   structural  two-tail-same  45 1.0000000    GV1
+# 6 unstructural  two-tail-same  98 1.0000000    GV1
+``` 
+
+## 5. PA site detection and annotation
+
+  In order to be able to analyze the APA sites of HELA later, we need to identify the PA sites in the sequence and annotate the PA sites we have identified using human annotation information. At the same time, this step will map the base distribution around the PA site and store it as a PDF file in the path you specify.  
+    
+   ***[NOTE]***  Please note that the chromosome name of the reference genome should be the same as the chromosome name used in the BAM file, otherwise it will result in an error!
+
+```{r}
+# Deciphering gff files
+#BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+# Deciphering genome files
+#BiocManager::install("BSgenome.Mmusculus.UCSC.mm10")
+library("BSgenome.Mmusculus.UCSC.mm10")
+bsgenome = BSgenome.Mmusculus.UCSC.mm10
+# Prepare the input file
+bamfilepath = system.file("extdata", "./GV_algin/PAIso-GV1.sorted.bam", package = "PolyAtailor", mustWork = TRUE)
+chrinfopath = system.file("extdata", "./GV_algin/chrinfo.txt", package = "PolyAtailor", mustWork = TRUE)
+resultpath = "./"
+# Annotated PA site
+PAs <- findAndAnnoPAs(bamfile=bamfilepath,chrinfo=chrinfopath,resultpath=resultpath,bsgenome=bsgenome,gffFile = TxDb.Mmusculus.UCSC.mm10.knownGene,sample="GV1",mergePAs=T,d=24)
+
+```
+
+<img src="./figures/1.png" alt="MarineGEO circle logo" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br/>
+
+## 6. distribution of poly(A) tail length
+
+  Using the PoltPAL family of functions, the tail length distribution of the gene or UMI of different sample will be plotted, as well as the global tail length distribution.  
+  The function *plotPALDistribution* will plot the global distribution of tail length under different samples, when the parameter *dType* is equal to "global". When the parameter "dType" is "gene", this function plots the PAL per gene distribution density curve, and when the parameter is "umi", it plots the PAL distribution density curve of PAL per umi.  
+
+```{r}
+data(GV1tailMapre)
+library(ggthemes)
+library(eoffice)
+p1 <- plotPALDistribution(GV1tailMapre,"./","global",medianPAL=T)
+p1
+p2 <- plotPALDistribution(AnnotedTails,"./","gene",medianPAL=T)
+p2
+```
+
+<img src="./figures/2.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br>    
+   
+## 7. PA sites analysis
+
+  The statistics of PA sites include three aspects:  
+    
+  **(1) The gene region distribution of PA sites**  
+  The plot function *plotPADistribution* will plot the gene region distribution barplot for all PA aites.  
+    
+```{r}
+data(PAs)
+p <- plotPADistribution(PAs,"./","#9BBFDC")
+p
+```
+
+<img src="./figures/3.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br>   
+
+  **(2) The gene frequency with different number of PA sites**  
+  The plot function *plotGenePAnumbers* will plot the gene frequency distribution with different number of PA sites.  
+    
+```{r}
+data(PAs)
+p <- plotGenePAnumbers(PAs,"./","#DF7C7D")
+p
+```
+
+<img src="./figures/4.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br>   
+
+  **(3) The occurrence rate of PA signal**  
+  The function *Plotpasignals* will plot the probability distribution of the occurrence of user-specified or default PA signal within the first 50bp base range of PA site.  
+    
+```{r}
+library("BSgenome.Mmusculus.UCSC.mm10")
+bsgenome = BSgenome.Mmusculus.UCSC.mm10
+data(PAs)
+p <- plotPASignals(PAs,"./",bsgenome = bsgenome)
+p
+```
+
+<img src="./figures/5.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br>      
+
+## 8. Base composition analysis 
+
+  Polyatailor contains abundant analysis and visualization tools of poly(A) tail base composition, including statistics of the number distribution of reads in different non-A base combinations, analysis of non-A base content in polyAtail of different lengths, and direct visual comparative analysis of intrested tails. All you need to do is enter a table that contains at least the genetic information and the complete tail sequence and all results will be saved in a PDF file. Of course, you can do each analysis separately.  
+    
+  **(1) Frequency of occurrence of different non-A base combinations**  
+  The number of reads present in each non-A base combination was calculated in the form of an upset plot, and reads present in multiple non-A base combinations were highlighted, The result can be called directly in the output of the nonAanalysis function. For example, in the tails of GV data, most of the tails contain only one particular non-A base, but there are also a number of tails in which all three non-A bases are present at the same time:
+
+```{r}
+data(AnnotedTails)
+library(stringi)
+re <- nonAanalysis(AnnotedTails)
+re$p1
+```
+
+<img src="./figures/6.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br>  
+
+  **(2) The base composition of tails of different lengths**  
+  The occurrence frequency of non-A bases in different tail lengths was counted at the base level or reads level, which can demonstrate the association between tail length and non-A base frequency to A certain extent.This result can also be invoked in the return result of nonAanalysis. In the results of the GV data we can find that T bases are the most abundant non-A bases.
+  
+```{r}
+re$p2
+re$p3
+```
+   
+<img src="./figures/7.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br> 
+    
+  **(3) Visualized comparison of tail base composition**  
+  In order to show the base composition of the tail more intuitively, we show the interested tails in the form of heat map and logo diagram, so that we can intuitively see the difference of base composition of different tails at the same position.This function requires a separate call to the tailViso function.
+    
+```{r}
+data(taildf)
+my_cutstom <- data.frame(names=c("A","C","T","G"),color=c("#3171A5","#4EAA4C","#C9C4C2","#D73D3D"))
+library(ggmsa)
+p <- tailViso(taildf,tailLen=100,Ntail=20,custom=my_cutstom,strand="-",faPath="D:/",showLogo=T,showReadNum= F)
+```
+   
+<img src="./figures/8.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br> 
+  
+## 9. Detection of PAL difference significance
+
+  The "PALdsa" function of PolyAtailor package can be used to detect the significant difference of tail length in batch at gene or PA level. We offer four ways to perform the significance of differences in tail length, namely the Mann-Whitney U test, the Kolmogorov-Smimov test, MosesExtreme reaction and the two-sided wilcoxon test, user can select one or all of these for calculation using the parameter "SAoDMethod". In addition to this, the user can also select the visualisation method using the parameters "withViolinPlot" and "withUpsetPlot". However, in the GV data, we only detected significant differences in PAL at the distal and proximal PA sites for 1 gene.
+    
+```{r}
+#BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
+data(AnnotedTails)
+files = system.file("extdata", "./output/PAs/PAs.txt", package = "PolyAtailor", mustWork = TRUE)
+PAs <- read.table(files,header=TRUE,sep=" ")
+diffPAL2PAgenes <- PALdsa(PAs,AnnotedTails,gff,mode="PD",SAoDMethod="ME",withViolinPlot=T,withUpsetPlot=F)
+
+```
+
+<img src="./figures/9.png" style="display: block;margin-left: auto;margin-right: auto;width: 90%;" /><br>   
+
+*****   
+***References***     
+Ye W, Liu T, Fu H, et al. movAPA: Modeling and visualization of dynamics of alternative polyadenylation across biological samples[J]. Bioinformatics, 2021, 37(16): 2470-2472.   
+Liu Y, Nie H, Liu H, et al. Poly (A) inclusive RNA isoform sequencing (PAIso− seq) reveals wide-spread non-adenosine residues within RNA poly (A) tails[J]. Nature communications, 2019, 10(1): 1-13.   
+Legnini I, Alles J, Karaiskos N, et al. FLAM-seq: full-length mRNA sequencing reveals principles of poly (A) tail length control[J]. Nature methods, 2019, 16(9): 879-886.
