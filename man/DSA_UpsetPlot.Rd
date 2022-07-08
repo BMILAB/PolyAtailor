@@ -25,10 +25,17 @@ Overlapping analysis of the results of differential tail length
 }
 \examples{
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
-gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
+library(movAPA)
+conflict_prefer("filter", "dplyr")
+conflict_prefer("mutate", "dplyr")
+conflict_prefer("select", "dplyr")
+conflict_prefer("rename", "dplyr")
+conflict_prefer("summarise", "dplyr")
+gff <- movAPA::parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
 data(AnnotedTails)
-files = system.file("extdata", "./output/PAs/PAs.txt", package = "PolyAtailor", mustWork = TRUE)
-PAs <- read.table(files,header=TRUE,sep=" ")
-DSA_result <- PALdsa(PAdf=PAs,PALdf=AnnotedTails,d=24,gff=gff,mode="PD",SAoDMethod="ME",withViolinPlot=T,withUpsetPlot=F)
-p <- DSA_UpsetPlot(DSA_result)
+files <- system.file("extdata", "./output/PAs/PAs.txt", package = "PolyAtailor", mustWork = TRUE)
+PAs <- read.table(files, header = TRUE, sep = " ")
+#DSA_result <- PALdsa(PAdf = PAs, PALdf = AnnotedTails, d = 24, gff = gff, 
+#mode = "PD", SAoDMethod = "ME", withViolinPlot = T, withUpsetPlot = F)
+#p <- DSA_UpsetPlot(DSA_result)
 }

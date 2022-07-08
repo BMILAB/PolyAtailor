@@ -25,7 +25,7 @@ Although we have identified the PA site and tail information for
   produce the final data table.
 }
 \examples{
-tailinfo = "the/path/of/tailinfo.txt"
-PAinfo = "the/path/of/PAinfo.txt"
-finaldata <- infomerge1(tailinfo,PAinfo)
+#tailinfo <- "the/path/of/tailinfo.txt"
+#PAinfo <- "the/path/of/PAinfo.txt"
+#finaldata <- infomerge1(tailinfo, PAinfo)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/funclib_PolyAtailor.R
 \name{tailScan}
 \alias{tailScan}
-\title{Use a variety of methods to help you quantify the tails in a sequence.}
+\title{tailScan}
 \usage{
 tailScan(
   fastq,
@@ -68,8 +68,9 @@ Save the quantitative tail results table of various algorithms to the
   path you specify.Meanwhile, return the tail dataframe
 }
 \description{
-\code{tailScan} Returns a table containing at least read_num, tail length,
-and tail sequence.
+\code{tailScan} Returns a table containing at least read_num,
+   tail length and tail sequence. Use a variety of methods to help you quantify 
+  the tails in a sequence.
 }
 \details{
 This function quantifies the possible tails of all sequences in a
@@ -80,9 +81,11 @@ This function quantifies the possible tails of all sequences in a
 }
 \examples{
 fastqfile <- "./inst/extdata/GV_fastq/PAIso_GV1.fastq"
-GV1tailDF<-tailScan(fastqfile,mcans=5,findUmi = F,resultpath =
-"./inst/extdata/output/",samplename =
-"GV1",tailAnchorLen=8,minTailLen=8,realTailLen=20,maxNtail=2,mapping=F)
+GV1tailDF <- tailScan(fastqfile,
+  mcans = 5, findUmi = F, resultpath =
+    "./inst/extdata/output/", samplename =
+    "GV1", tailAnchorLen = 8, minTailLen = 8, realTailLen = 20, maxNtail = 2, mapping = F
+)
 head(GV1tailDF)
 }
 \seealso{

@@ -52,5 +52,5 @@ The batchCompare function provides the ability to quickly compare
   comparable dimensions, namely "gene", "tail", "PACds" or "read".
 }
 \examples{
-batchCompare(datalist,"upset","read",mycolors=c("#b681bd","#377eb8"))
+batchCompare(datalist, "upset", "read", mycolors = c("#b681bd", "#377eb8"))
 }

@@ -26,8 +26,8 @@ Each chromosome was traversed and PA sites were identified by
   a-rich at the end. Note that the BAM file needs to be indexed.
 }
 \examples{
-bamfilepath = "./data/GV_algin/PAIso-GV1.sorted.bam"
+bamfilepath <- "./data/GV_algin/PAIso-GV1.sorted.bam"
 which <- chr.g[i]
-what <- c("qname","rname","strand","pos","cigar","seq")
-PAlist <- findChrTails(bamfile=bamfilepath, which, what , count = T)
+what <- c("qname", "rname", "strand", "pos", "cigar", "seq")
+PAlist <- findChrTails(bamfile = bamfilepath, which, what, count = T)
 }

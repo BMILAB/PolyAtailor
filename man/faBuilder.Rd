@@ -2,7 +2,7 @@
 % Please edit documentation in R/funclib_PolyAtailor.R
 \name{faBuilder}
 \alias{faBuilder}
-\title{fasta file builder}
+\title{faBuilder}
 \usage{
 faBuilder(
   fastqfile,
@@ -69,8 +69,10 @@ This function is used to extract the PolyA tail and part of the
 }
 \examples{
 fastqfile <- "./inst/extdata/GV_fastq/PAIso_GV1.fastq"
-faBuilderRE <- faBuilder(fastqfile,mcans=5,findUmi = F,resultpath = "./inst/extdata/output/",samplename =
-"GV1",tailAnchorLen=8,mapping=F)
+faBuilderRE <- faBuilder(fastqfile,
+  mcans = 5, findUmi = F, resultpath = "./inst/extdata/output/", samplename =
+    "GV1", tailAnchorLen = 8, mapping = F
+)
 head(faBuilderRE)
 }
 \seealso{

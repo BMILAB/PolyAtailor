@@ -34,6 +34,6 @@ Using the PoltPAL family of functions, the tail length distribution
 }
 \examples{
 load("./data/output/AnnotatedTails.RData")
-p1 <- plotPALDistribution(AnnotedTails,"./inst/extdata/figures/","global",medianPAL=T)
-p2 <- plotPALDistribution(AnnotedTails,"./inst/extdata/figures/","gene",medianPAL=T)
+p1 <- plotPALDistribution(AnnotedTails, "./inst/extdata/figures/", "global", medianPAL = T)
+p2 <- plotPALDistribution(AnnotedTails, "./inst/extdata/figures/", "gene", medianPAL = T)
 }

@@ -33,7 +33,7 @@ plot the probability distribution of the occurrence of
 }
 \examples{
 library("BSgenome.Mmusculus.UCSC.mm10")
-bsgenome = BSgenome.Mmusculus.UCSC.mm10
+bsgenome <- BSgenome.Mmusculus.UCSC.mm10
 load("./data/output/PAs.RData")
-p <- plotPASignals(PAs,"./inst/extdata/figures/",bsgenome = bsgenome)
+p <- plotPASignals(PAs, "./inst/extdata/figures/", bsgenome = bsgenome)
 }

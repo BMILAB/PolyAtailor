@@ -25,11 +25,18 @@ The tail length difference analysis results of the four difference
   different colors to facilitate users to view the differences.
 }
 \examples{
-BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+#BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
-gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
-load("./data/AnnotedTails.RData")
-PAs <- read.table("./inst/extdata/output/PAs/PAs.txt",header=T,sep=" ")
-DSA_result <- PALdsa(PAs,AnnotedTails,gff,mode="PD",SAoDMethod="ME",withViolinPlot=T,withUpsetPlot=F)
-p <- DSA_ViolinPlot(DSA_result,SAoDMethod="KS")
+library(movAPA)
+conflict_prefer("filter", "dplyr")
+conflict_prefer("mutate", "dplyr")
+conflict_prefer("select", "dplyr")
+conflict_prefer("rename", "dplyr")
+conflict_prefer("summarise", "dplyr")
+gff <- movAPA::parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
+#data(AnnotedTails.RData)
+#files <- system.file("extdata", "./output/PAs/PAs.txt", package = "PolyAtailor", mustWork = TRUE)
+#PAs <- read.table(files, header = T, sep = " ")
+#DSA_result <- PALdsa(PAs, AnnotedTails, gff, mode = "PD", SAoDMethod = "ME", withViolinPlot = T, withUpsetPlot = F)
+#p <- DSA_ViolinPlot(DSA_result, SAoDMethod = "KS")
 }

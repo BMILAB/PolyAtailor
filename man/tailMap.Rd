@@ -2,7 +2,7 @@
 % Please edit documentation in R/funclib_PolyAtailor.R
 \name{tailMap}
 \alias{tailMap}
-\title{Tail quantitative by alignment}
+\title{tailMap}
 \usage{
 tailMap(
   bamfile,
@@ -63,7 +63,7 @@ If your sequence is longreads, this function is
 }
 \examples{
 bamfile <- "./inst/extdata/GV_algin/PAIso-GV1.sorted.bam"
-GV1tailMapre<-tailMap(bamfile,mcans=5,minTailLen=8,findUmi = F,longRead=T)
+GV1tailMapre <- tailMap(bamfile, mcans = 5, minTailLen = 8, findUmi = F, longRead = T)
 }
 \seealso{
 [tailScan()] to quantitative tails without sequence algin.

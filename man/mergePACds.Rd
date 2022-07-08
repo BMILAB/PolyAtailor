@@ -2,7 +2,7 @@
 % Please edit documentation in R/funclib_PolyAtailor.R
 \name{mergePACds}
 \alias{mergePACds}
-\title{Merge multiple PACdatasets}
+\title{mergePACds}
 \usage{
 mergePACds(PACdsList, d=24)
 }
@@ -31,13 +31,13 @@ But after grouping and/or merging, you may need call annotatePAC to annotate the
 \examples{
 ## Group PA into PACs
 data(PACds)
-PACds@counts=rbind(PACds@counts, PACds@counts)
-PACds@anno=rbind(PACds@anno, PACds@anno)
-ds=mergePACds(PACds, d=24)
+PACds@counts <- rbind(PACds@counts, PACds@counts)
+PACds@anno <- rbind(PACds@anno, PACds@anno)
+ds <- mergePACds(PACds, d = 24)
 ## merge two PACds
-ds1=makeExamplePACds()
-ds2=makeExamplePACds()
-ds=mergePACds(list(ds1, ds2), d=24)
+ds1 <- makeExamplePACds()
+ds2 <- makeExamplePACds()
+ds <- mergePACds(list(ds1, ds2), d = 24)
 }
 \seealso{
 [annotatePAC()] to annotate a PACdataset; [rbind()] to combine multiple PACdatasets of the same format.

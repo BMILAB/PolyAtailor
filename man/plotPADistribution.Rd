@@ -28,5 +28,5 @@ Plot the gene region distribution of PA sites, including "3UTR",
 }
 \examples{
 load("./data/output/PAs.RData")
-p <- plotPADistribution(PAs,"./inst/extdata/figures/","#9BBFDC")
+p <- plotPADistribution(PAs, "./inst/extdata/figures/", "#9BBFDC")
 }

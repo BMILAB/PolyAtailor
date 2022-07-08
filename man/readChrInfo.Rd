@@ -2,7 +2,7 @@
 % Please edit documentation in R/funclib_PolyAtailor.R
 \name{readChrInfo}
 \alias{readChrInfo}
-\title{Read the ChrInfo of your data.}
+\title{readChrInfo}
 \usage{
 readChrInfo(file)
 }
@@ -22,6 +22,6 @@ the chromosome, the range on the reference genome, the direction of the
 sequence, etc
 }
 \examples{
-chrinfopath = "./data/GV_algin/chrinfo.txt"
+chrinfopath <- "./data/GV_algin/chrinfo.txt"
 test <- readChrInfo(chrinfopath)
 }

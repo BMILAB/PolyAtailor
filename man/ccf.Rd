@@ -27,7 +27,8 @@ For various reasons, we sometimes need to convert the format of
 }
 \examples{
 ref <- read.table("./data/HELA1/GRCH38p13_sequences_report.txt",
-                 header=T,sep="\t",blank.lines.skip = T)
-PAdf <-read.table("***")
-result <- ccf(ref,PAdf,"RefSeq.Accn","UCSC.style.name")
+  header = T, sep = "\t", blank.lines.skip = T
+)
+PAdf <- read.table("***")
+result <- ccf(ref, PAdf, "RefSeq.Accn", "UCSC.style.name")
 }

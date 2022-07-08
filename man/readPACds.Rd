@@ -2,7 +2,7 @@
 % Please edit documentation in R/funclib_PolyAtailor.R
 \name{readPACds}
 \alias{readPACds}
-\title{Read a PACdataset}
+\title{readPACds}
 \usage{
 readPACds(pacFile, colDataFile, noIntergenic=TRUE, PAname='PA')
 }
@@ -34,31 +34,43 @@ readPACds reads PAC counts and sample annotation into a PACdataset.
 \examples{
 data(PACds)
 ## read simple PACfile that only has columns chr/strand/coord
-pacFile=PACds@anno[,c('chr','strand','coord')]
-colDataFile=NULL
-p=readPACds(pacFile, colDataFile)
+pacFile <- PACds@anno[, c("chr", "strand", "coord")]
+colDataFile <- NULL
+p <- readPACds(pacFile, colDataFile)
+
 ## read PACfile that has columns chr/strand/coord and sample columns
-pacFile=PACds@anno[,c('chr','strand','coord')]
-pacFile=cbind(pacFile, PACds@counts[,c('anther1','embryo1','anther2')])
-colDataFile=NULL
-p=readPACds(pacFile, colDataFile)
-p@colData; head(p@counts)
+pacFile <- PACds@anno[, c("chr", "strand", "coord")]
+pacFile <- cbind(pacFile, PACds@counts[, c("anther1", "embryo1", "anther2")])
+colDataFile <- NULL
+p <- readPACds(pacFile, colDataFile)
+p@colData
+head(p@counts)
+
 ## read PACfile that has columns chr/strand/coord, sample columns, and gff cols like gene/gene_type/ftr/ftr_start/ftr_end/UPA_start/UPA_end
-pacFile=PACds@anno
-pacFile=cbind(pacFile, PACds@counts[,c('anther1','embryo1','anther2')])
-colDataFile=NULL
-p=readPACds(pacFile, colDataFile)
-p@colData; head(p@counts); head(p@anno)
-pacFile=PACds@anno
-smps=c('anther1','embryo1','anther2')
-pacFile=cbind(pacFile, PACds@counts[,smps])
-colDataFile=as.data.frame(matrix(c('group1','group2','group1'), ncol=1, dimnames=list(smps, 'group')))
-p=readPACds(pacFile, colDataFile)
-p@colData; head(p@counts); head(p@anno)
-write.table(pacFile, file='pacFile', row.names=FALSE)
-write.table(colDataFile, file='colDataFile', row.names=TRUE)
-p=readPACds(pacFile='pacFile',
-            colDataFile='colDataFile', noIntergenic=TRUE, PAname='PA')
+pacFile <- PACds@anno
+pacFile <- cbind(pacFile, PACds@counts[, c("anther1", "embryo1", "anther2")])
+colDataFile <- NULL
+p <- readPACds(pacFile, colDataFile)
+p@colData
+head(p@counts)
+head(p@anno)
+
+##read from data frame of PACfile and colDataFile
+pacFile <- PACds@anno
+smps <- c("anther1", "embryo1", "anther2")
+pacFile <- cbind(pacFile, PACds@counts[, smps])
+colDataFile <- as.data.frame(matrix(c("group1", "group2", "group1"), ncol = 1, dimnames = list(smps, "group")))
+p <- readPACds(pacFile, colDataFile)
+p@colData
+head(p@counts)
+head(p@anno)
+## read from file names of PACfile and colDataFile
+write.table(pacFile, file = "pacFile", row.names = FALSE)
+write.table(colDataFile, file = "colDataFile", row.names = TRUE)
+p <- readPACds(
+  pacFile = "pacFile",
+  colDataFile = "colDataFile", noIntergenic = TRUE, PAname = "PA"
+)
 
 }
 \seealso{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/funclib_PolyAtailor.R
 \name{geneAnno}
 \alias{geneAnno}
-\title{Tail quantitative by alignment}
+\title{geneAnno}
 \usage{
 geneAnno(tailDF, refPath, bamdf, GFF, longRead)
 }
@@ -39,5 +39,5 @@ BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 load("./data/output/GV1tailDF.RData")
 load("./data/output/GV1tailMapre.RData")
-AnnotedTails = geneAnno(tailDF=GV1tailDF,bamdf=GV1tailMapre,GFF=TxDb.Mmusculus.UCSC.mm10.knownGene,longRead=F)
+AnnotedTails <- geneAnno(tailDF = GV1tailDF, bamdf = GV1tailMapre, GFF = TxDb.Mmusculus.UCSC.mm10.knownGene, longRead = F)
 }

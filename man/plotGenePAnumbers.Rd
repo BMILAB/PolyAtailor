@@ -28,5 +28,5 @@ Plot the gene frequency distribution with different number of PA
 }
 \examples{
 load("./data/output/PAs.RData")
-p <- plotGenePAnumbers(PAs,"./inst/extdata/figures/","#DF7C7D")
+p <- plotGenePAnumbers(PAs, "./inst/extdata/figures/", "#DF7C7D")
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/funclib_PolyAtailor.R
 \name{get3UTRAPAds}
 \alias{get3UTRAPAds}
-\title{Get 3'UTR APA PACdataset}
+\title{get3UTRAPAds}
 \usage{
 get3UTRAPAds(pacds, sortPA=TRUE, choose2PA=NULL, avgPACtag=0, avgGeneTag=0, clearPAT=0)
 }
@@ -23,20 +23,25 @@ A PACdataset with only 3'UTR APA sites. If there is no result, return an empty P
 }
 \description{
 get3UTRAPAds subset a PACdataset to get all PACs of genes with 3'UTR APA sites.
-}
-\details{
-Genes with 3'UTR APA sites are genes with multiple PACs in its 3'UTR.
+
+ @details  Genes with 3'UTR APA sites are genes with multiple PACs in its 3'UTR.
 If the column toStop is not in PACds@anno, then will calculate the 3'UTR length first.
 First filter by paramters like avgPACtag, etc., and then by choose2PA.
 }
 \examples{
 data(PACds)
 ## Get all 3'UTR APA
-pp1=get3UTRAPAds(PACds,sortPA=TRUE); summary(pp1); is3UTRAPAds(pp1); is3UTRAPAds(PACds)
+pp1 <- get3UTRAPAds(PACds, sortPA = TRUE)
+summary(pp1)
+is3UTRAPAds(pp1)
+is3UTRAPAds(PACds)
 ## Get proximal distal PA
-pp1=get3UTRAPAds(PACds, sortPA=TRUE, choose2PA='most');
-summary(pp1); is3UTRAPAds(pp1); is3UTRAPAds(PACds); head(pp1@anno)
-pp1@anno[pp1@anno$gene=='PH02Gene00018',]
+pp1 <- get3UTRAPAds(PACds, sortPA = TRUE, choose2PA = "most")
+summary(pp1)
+is3UTRAPAds(pp1)
+is3UTRAPAds(PACds)
+head(pp1@anno)
+pp1@anno[pp1@anno$gene == "PH02Gene00018", ]
 }
 \seealso{
 Other PACdataset functions: 

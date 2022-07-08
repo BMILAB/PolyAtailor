@@ -31,8 +31,8 @@ The findPAs function takes the information from the BAM file and the
   information to the result path that you specify.
 }
 \examples{
-bamfilepath = "./data/GV_algin/PAIso-GV1.sorted.bam"
-chrinfopath = "./data/GV_algin/chrinfo.txt"
-resultpath = "./data/output/PAs"
-test <- findPAs(chrinfo=chrinfopath,bamfile=bamfilepath,resultpath=resultpath)
+bamfilepath <- "./data/GV_algin/PAIso-GV1.sorted.bam"
+chrinfopath <- "./data/GV_algin/chrinfo.txt"
+resultpath <- "./data/output/PAs"
+test <- findPAs(chrinfo = chrinfopath, bamfile = bamfilepath, resultpath = resultpath)
 }

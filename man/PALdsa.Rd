@@ -54,10 +54,11 @@ The poly(A) tail length of genes with two PACs was analyzed for
   conducting the significance analysis of tail length difference.
 }
 \examples{
-BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+#BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
-gff <- parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
-load("./data/AnnotedTails.RData")
-PAs <- read.table("./inst/extdata/output/PAs/PAs.txt",header=T,sep=" ")
-diffPAL2PAgenes <- PALdsa(PAs,AnnotedTails,gff,mode="PD",SAoDMethod="ME",withViolinPlot=T,withUpsetPlot=F)
+gff <- movAPA::parseGenomeAnnotation(TxDb.Mmusculus.UCSC.mm10.knownGene)
+#data(AnnotedTails)
+#files <- system.file("extdata", "./output/PAs/PAs.txt", package = "PolyAtailor", mustWork = TRUE)
+#PAs <- read.table(files, header = TRUE, sep = " ")
+#diffPAL2PAgenes <- PALdsa(PAs, AnnotedTails, gff, mode = "PD", SAoDMethod = "ME", withViolinPlot = T, withUpsetPlot = F)
 }

@@ -40,5 +40,5 @@ This function was used to analyze the data for genes with two PA
 }
 \examples{
 gff <- parseGenomeAnnotation(TxDb.Hsapiens.UCSC.hg38.knownGene)
-diffPAL2PAgenes <- diffPALgene(PAdf1,al1,gff)
+diffPAL2PAgenes <- diffPALgene(PAdf1, al1, gff)
 }

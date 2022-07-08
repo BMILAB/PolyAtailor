@@ -54,11 +54,11 @@ library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 # Deciphering genome files
 BiocManager::install("BSgenome.Mmusculus.UCSC.mm10")
 library("BSgenome.Mmusculus.UCSC.mm10")
-bsgenome = BSgenome.Mmusculus.UCSC.mm10
-gffFile = TxDb.Mmusculus.UCSC.mm10.knownGene
-bamfile =system.file("extdata", "./GV_algin/GV1subseq.sorted.bam", package = "PolyAtailor", mustWork = TRUE)
-chrinfo =system.file("extdata", "./GV_algin/chrinfo.txt", package = "PolyAtailor", mustWork = TRUE)
-resultpath = "./data/output/PAs"
+bsgenome <- BSgenome.Mmusculus.UCSC.mm10
+gffFile <- TxDb.Mmusculus.UCSC.mm10.knownGene
+bamfile <- system.file("extdata", "./GV_algin/GV1subseq.sorted.bam", package = "PolyAtailor", mustWork = TRUE)
+chrinfo <- system.file("extdata", "./GV_algin/chrinfo.txt", package = "PolyAtailor", mustWork = TRUE)
+resultpath <- "./data/output/PAs"
 # Annotated PA site
-PAs <- findAndAnnoPAs(bamfile=bamfilepath,chrinfo=chrinfopath,resultpath=resultpath,bsgenome=bsgenome,gffFile = gffFile,sample="GV1",mergePAs=T,d=24)
+PAs <- findAndAnnoPAs(bamfile = bamfilepath, chrinfo = chrinfopath, resultpath = resultpath, bsgenome = bsgenome, gffFile = gffFile, sample = "GV1", mergePAs = T, d = 24)
 }

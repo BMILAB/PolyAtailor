@@ -39,5 +39,5 @@ This function analyzes whether there is a significant difference
 }
 \examples{
 gff <- parseGenomeAnnotation(TxDb.Hsapiens.UCSC.hg38.knownGene)
-DSA_result <- diffPALdpPA(PAdf1,al1,gff)
+DSA_result <- diffPALdpPA(PAdf1, al1, gff)
 }
