@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
 )
 
 ## ----setup--------------------------------------------------------------------
+#  library(conflicted)
 #  conflict_prefer("Position", "ggplot2")
 #  conflict_prefer("filter", "dplyr")
 #  conflict_prefer("mutate", "dplyr")
@@ -31,11 +32,13 @@ knitr::opts_chunk$set(
 #  conflict_prefer("last", "dplyr")
 #  conflict_prefer("simplify", "purrr")
 #  conflict_prefer("%>%", "dplyr")
-#  library(polyAtailor)
+#  library(PolyAtailor)
 #  library(movAPA)
 #  #require(devtools)
 #  #install_github("BMILAB/movAPA")
-#  fastqfile <- system.file("extdata", "./GV_fastq/PAIso_GV1.fastq", package = "PolyAtailor", mustWork = TRUE)
+#  library(Rsamtools)
+#  #BiocManager::install("Rsamtools")
+#  fastqfile <- system.file("extdata", "./GV_fastq/PAIso_GV1_subset.fastq", package = "PolyAtailor", mustWork = TRUE)
 #  resultpath = "./output"
 #  if(!dir.exists(resultpath)){
 #    dir.create(resultpath)
@@ -65,7 +68,7 @@ knitr::opts_chunk$set(
 ## -----------------------------------------------------------------------------
 #  #step1
 #  #Tails and partial sequences were extracted from long reads and FASTA files were generated for alignment.
-#  fastqfile <- system.file("extdata", "./GV_fastq/PAIso_GV1.fastq", package = "PolyAtailor", mustWork = TRUE)
+#  fastqfile <- system.file("extdata", "./GV_fastq/PAIso_GV1_subset.fastq", package = "PolyAtailor", mustWork = TRUE)
 #  library(seqRFLP)
 #  faBuilderRE <- faBuilder(fastqfile,mcans=5,findUmi = F,resultpath = resultpath ,samplename = "GV1",tailAnchorLen=8,mapping=F,findTailType="both")
 #  # > head(faBuilderRE[,c(1,2,3,5)])
@@ -106,7 +109,7 @@ knitr::opts_chunk$set(
 #  # 6 structural  one-tail 57 1.000000    GV1
 #  
 #  #step4
-#  BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+#  #BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 #  library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 #  data(GV1tailDF)
 #  data(GV1tailMapre)
@@ -172,10 +175,9 @@ knitr::opts_chunk$set(
 #  # 6 structural  one-tail 32 1.000000    GV1
 #  
 #  #step2
-#  BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+#  #BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 #  library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 #  data(GV1tailDF)
-#  data()
 #  AnnotedTails = geneAnno(tailDF=GV1tailDF,bamdf=GV1tailMapre,GFF=TxDb.Mmusculus.UCSC.mm10.knownGene,longRead=F)
 #  head(AnnotedTails)
 #  #           read_num   chr strand   gene gene_type PAL
@@ -202,14 +204,14 @@ knitr::opts_chunk$set(
 
 ## -----------------------------------------------------------------------------
 #  # Deciphering gff files
-#  BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+#  #BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
 #  library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 #  # Deciphering genome files
-#  BiocManager::install("BSgenome.Mmusculus.UCSC.mm10")
+#  #BiocManager::install("BSgenome.Mmusculus.UCSC.mm10")
 #  library("BSgenome.Mmusculus.UCSC.mm10")
 #  bsgenome = BSgenome.Mmusculus.UCSC.mm10
 #  # Prepare the input file
-#   bamfilepath = system.file("extdata", "./GV_algin/PAIso-GV1.sorted.bam", package = "PolyAtailor", mustWork = TRUE)
+#  bamfilepath = system.file("extdata", "./GV_algin/PAIso-GV1.sorted.bam", package = "PolyAtailor", mustWork = TRUE)
 #  chrinfopath = system.file("extdata", "./GV_algin/chrinfo.txt", package = "PolyAtailor", mustWork = TRUE)
 #  resultpath = "./"
 #  # Annotated PA site
@@ -220,26 +222,26 @@ knitr::opts_chunk$set(
 #  data(GV1tailMapre)
 #  library(ggthemes)
 #  library(eoffice)
-#  p1 <- plotPALDistribution(GV1tailMapre,"./data/figures/","global",medianPAL=T)
+#  p1 <- plotPALDistribution(GV1tailMapre,"./","global",medianPAL=T)
 #  p1
-#  p2 <- plotPALDistribution(AnnotedTails,"./data/figures/","gene",medianPAL=T)
+#  p2 <- plotPALDistribution(AnnotedTails,"./","gene",medianPAL=T)
 #  p2
 
 ## -----------------------------------------------------------------------------
 #  data(PAs)
-#  p <- plotPADistribution(PAs,"./data/figures/","#9BBFDC")
+#  p <- plotPADistribution(PAs,"./","#9BBFDC")
 #  p
 
 ## -----------------------------------------------------------------------------
 #  data(PAs)
-#  p <- plotGenePAnumbers(PAs,"./data/figures/","#DF7C7D")
+#  p <- plotGenePAnumbers(PAs,"./","#DF7C7D")
 #  p
 
 ## -----------------------------------------------------------------------------
 #  library("BSgenome.Mmusculus.UCSC.mm10")
 #  bsgenome = BSgenome.Mmusculus.UCSC.mm10
 #  data(PAs)
-#  p <- plotPASignals(PAs,"./data/figures/",bsgenome = bsgenome)
+#  p <- plotPASignals(PAs,"./",bsgenome = bsgenome)
 #  p
 
 ## -----------------------------------------------------------------------------

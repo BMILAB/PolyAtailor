@@ -13,10 +13,12 @@ knitr::opts_chunk$set(
 #  # 2.Align sequences and convert file formats
 #  # 3.Quantitativing poly(A) tails with PolyAtailor
 #  rm(list=ls())
-#  library(polyAtailor)
+#  library(PolyAtailor)
 #  #require(devtools)
 #  #install_github("BMILAB/movAPA")
 #  library(movAPA)
+#  library(Rsamtools)
+#  #BiocManager::install("Rsamtools")
 #  #Persistently prefer one function over anothe, in case
 #  conflict_prefer_all("PolyAtailor", "dplyr")
 #  conflict_prefer_all("PolyAtailor", "IRanges")
@@ -24,7 +26,7 @@ knitr::opts_chunk$set(
 #  
 #  ## For full-length sequences the longRead parameter is set to T
 #  #here dataset1 is subset of Dataset1 data
-#  data1.path <- system.file("extdata", "./GV_algin/dataset1_sort.bam", package = "PolyAtailor", mustWork = TRUE)
+#  data1.path <- system.file("extdata", "./GV_algin/d1_subset.bam", package = "PolyAtailor", mustWork = TRUE)
 #  D1 = tailMap(bamfile=data1.path,mcans=5,minTailLen=8,findUmi = F,longRead=T)
 #  head(D1[,1:4])
 #  #            read_num          chr strand     coord
@@ -37,7 +39,7 @@ knitr::opts_chunk$set(
 #  
 #  ## For NGS sequences the longread parameter is set to F
 #  #here dataset2 is subset of Dataset2 data
-#  data2.path <- system.file("extdata", "./GV_algin/dataset2_sort.bam", package = "PolyAtailor", mustWork = TRUE)
+#  data2.path <- system.file("extdata", "./GV_algin/d2_subset.bam", package = "PolyAtailor", mustWork = TRUE)
 #  D2 = tailMap(bamfile=data2.path,mcans=5,minTailLen=8,findUmi = F,longRead=F)
 #  head(D2[,1:4])
 #  #              read_num          chr strand     coord
@@ -56,8 +58,8 @@ knitr::opts_chunk$set(
 #  #BiocManager::install("BSgenome.Mmusculus.UCSC.mm10")
 #  library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 #  #BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
-#  bsgenome = BSgenome.Hsapiens.UCSC.hg38
-#  gffFile = TxDb.Hsapiens.UCSC.hg38.knownGene
+#  bsgenome = BSgenome.Mmusculus.UCSC.mm10
+#  gffFile = TxDb.Mmusculus.UCSC.mm10.knownGene
 #  chrinfo = system.file("extdata", "./GV_algin/chrinfo.txt", package = "PolyAtailor", mustWork = TRUE)
 #  resultpath = "./result"
 #  if(!dir.exists(resultpath)){
@@ -76,27 +78,31 @@ knitr::opts_chunk$set(
 ## ----eval=FALSE---------------------------------------------------------------
 #  datalist = list(Batch1 = pacD1@anno, Batch2 = pacD2@anno)
 #  dev.off()
-#  p = batchCompare(datalist=datalist,format="upset",dimension="gene",mycolors=c("#be8ec4","#7ed321","#7ed167"))
+#  p = batchCompare(datalist=datalist,format="upset",dimension="gene",mycolors=c("#be8ec4","#7ed321"))
 #  p
 #  library(VennDiagram)
 #  p = batchCompare(datalist=datalist,format="veen",dimension="gene",mycolors=c("#be8ec4","#7ed321"))
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  datalist = list(Batch1 = D1, Batch2 = D2)
+#  #For example only
+#  datalist = list(Batch1 = D1, Batch2 = D1)
 #  p = batchCompare(datalist,format="bar",dimension="read",mycolors=c("#9bbfdc","#ab99c1"))
 #  p
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  datalist = list(Batch1 = D1, Batch2 = D2)
-#  BiocManager::install("PupillometryR")
+#  #For example only
+#  datalist = list(Batch1 = D1, Batch2 = D1)
+#  #BiocManager::install("PupillometryR")
 #  library(PupillometryR)
 #  library(ggthemes)
 #  p = batchCompare(datalist,format="bar",dimension="tail",mycolors=c("#f18687","#9bbfdc"),rep=F)
+#  #or
+#  #batchCompare(datalist,format="bar",dimension="tail",mycolors=c("#f18687","#9bbfdc"),rep=T)
 #  p
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  PACdslist = list(Batch1 = pacD1, Batch2 = pacD2)
-#  p = batchCompare(PACdslist,dimension="PACds",findOvpPACds=T,annotateByKnownPAC=T,d=100)
+#  p = batchCompare(PACdslist,dimension="PACds",findOvpPACds=T,annotateByKnownPAC=T,d=100,mycolors=c("#be8ec4","#7ed321"),rep=F)
 #  head(p[['OvpPACds']])  #or head(p$OvpPACds)
 #  # pacD1 pacD2 Total1 Total2 Ovp1 Ovp2 Ovp1Pct Ovp2Pct
 #  # 1    1    1  31289 186626 2404 2775      8%      1%
