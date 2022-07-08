@@ -96,7 +96,6 @@ conflict_prefer("last", "dplyr")
 conflict_prefer("simplify", "purrr")
 conflict_prefer("%>%", "dplyr")
 
-# build-in function -------------------------------------------------------
 dss2df <- function(dss) {
   data.frame(width = width(dss), seq = as.character(dss), names = names(dss))
 }
@@ -736,7 +735,7 @@ AinB <- function(A, B, all = T) {
   }
 }
 
-# tailSlider -----------------------------------------------------------
+
 tailSlider <- function(seq, anchors, mcnas, findUmi, lumi, adapterSeq, anchorSeq, mapping) {
   # Set default parameters
   if (missing(mcnas)) {
@@ -1016,7 +1015,7 @@ tailSlider <- function(seq, anchors, mcnas, findUmi, lumi, adapterSeq, anchorSeq
 }
 
 
-# tailFinder ------------------------------------------------------------
+
 tailFinder <- function(fastdf, mcans, findUmi, lumi, adapterSeq, anchorSeq, resultpath, samplename, tailAnchorLen, mapping, findTailType) {
   # MCNAS:Maximum continuous non-A segment
   # Note: The read_num column in fastdf is named read_num uniformly below
@@ -1150,7 +1149,7 @@ tailFinder <- function(fastdf, mcans, findUmi, lumi, adapterSeq, anchorSeq, resu
 }
 
 
-# TailFilter --------------------------------------------------------------
+
 tailFilter <- function(tailsinfo, findUmi, anchorSeq, minTailLen, realTailLen, maxNtail) {
   # 1.Default value setting
   if (missing(minTailLen)) {
@@ -1225,7 +1224,7 @@ tailFilter <- function(tailsinfo, findUmi, anchorSeq, minTailLen, realTailLen, m
   return(tailsinfo)
 }
 
-# tailClassify -----------------------------------------------------------------
+
 tailClassify <- function(tailsinfo, findUmi, maxNtail, mapping) {
   if (missing(maxNtail)) {
     maxNtail <- 2
@@ -2004,8 +2003,6 @@ ChangeChrFormat <- function(df,refPath,from,to){
 }
 
 
-
-# tailScan --------------------------------------------------------------------
 #' @title tailScan 
 #'
 #' @description \code{tailScan} Returns a table containing at least read_num,
@@ -2201,7 +2198,6 @@ tailScan <- function(fastq, mcans, findUmi, lumi,
 
 
 
-# faBuilder ---------------------------------------------------------------
 #' @title  faBuilder
 #'
 #' @description \code{faBuilder} Tails and partial sequences were extracted from
@@ -2697,8 +2693,6 @@ tailMap <- function(bamfile, mcans, minTailLen, findUmi, maxNtail, mapping, long
 
 
 
-# geneAnno function
-# geneAnno ----------------------------------------------------------------
 #' @title geneAnno
 #'
 #' @description \code{geneAnno}Add genetic information to the tail after
@@ -2792,7 +2786,7 @@ geneAnno <- function(tailDF, refPath, bamdf, GFF, longRead) {
 ### There are two ways to calculate PA sites: counting and not counting.
 ### The count method not only returns information about the PA sites but also
 ### counts how many reads have the same PA sites.
-# findPAs -----------------------------------------------------------
+
 #' @title findPAs
 #'
 #' @description Each chromosome was traversed and PA sites were identified by
@@ -2843,7 +2837,6 @@ findPAs <- function(chrinfo, bamfile, resultpath, count) {
 }
 
 # readChrInfo function
-# readChrInfo -------------------------------------------------------------
 #' @title readChrInfo
 #'
 #' @description \code{readChrInfo} returns the S4 format data of all the chromosome information you input.
@@ -2869,9 +2862,6 @@ readChrInfo <- function(file) {
   return(chr.g)
 }
 
-
-# findChrTails function
-# findChrTails ------------------------------------------------------------
 #' @title findChrTails
 #'
 #' @description Each chromosome was traversed and PA sites were identified by
@@ -2918,8 +2908,6 @@ findChrTails <- function(bamfile, which, what, count) {
 }
 
 
-# findAandAnnoPAs
-# findAndAnnoPAs ------------------------------------------------------------
 #' @title findAndAnnoPAs
 #'
 #' @description Find and annotate PA sites.
@@ -3050,7 +3038,6 @@ findAndAnnoPAs <- function(chrinfo, bamfile, resultpath, bsgenome, gffFile, samp
 # of different lengths, and direct visual comparative analysis of intrested
 # tails.
 ### The following functions are used for non-A base analysis
-# ccf --------------------------------------------------
 #' @title ccf
 #'
 #' @description Convert chromosome name format.
@@ -3082,7 +3069,7 @@ ccf <- function(ref, PAdf, fromFormat, toFormat) {
   return(PAdf)
 }
 
-# Read a PACdataset -------------------------------------------------------
+
 #' @title readPACds
 #'
 #' @description readPACds reads PAC counts and sample annotation into a PACdataset.
@@ -3261,7 +3248,7 @@ readPACds <- function(pacFile, colDataFile = NULL, noIntergenic = TRUE, PAname =
   return(PACds)
 }
 
-# Merge multiple PACdatasets ----------------------------------------------
+
 #' @title mergePACds
 #'
 #' @description  mergePACds groups nearby PACs from single/multiple PACdataset objects.
@@ -3382,7 +3369,6 @@ mergePACds <- function(PACdsList, d = 24) {
 }
 
 
-# get3UTRAPAds ------------------------------------------------
 #' @title get3UTRAPAds
 #'
 #' @description  get3UTRAPAds subset a PACdataset to get all PACs of genes with 3'UTR APA sites.
@@ -3504,7 +3490,6 @@ PACds2PAdf <- function(PACds) {
   return(df)
 }
 
-# internal function -------------------------------------------------------
 # function1 for apply
 PAtag <- function(x, y, d) {
   coord <- x["coord"]
@@ -3612,7 +3597,7 @@ dpPAtag <- function(x, y) {
   }
 }
 
-# diffPAL2PAgene -----------------------------------------------------------------
+
 #' @title diffPAL2PAgene
 #'
 #' @description Analysis of significant difference in tail length of genes with
@@ -3733,7 +3718,7 @@ diffPAL2PAgene <- function(PAdf, PALdf, gff, d) {
   return(result)
 }
 
-# diffPALdpPA-------------------------------------------------------------------
+
 #' @title diffPALdpPA
 #'
 #' @description Analyzing whether there is a significant difference
